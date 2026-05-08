@@ -1,1 +1,63 @@
-<!DOCTYPE html><html><head><title>About</title></head><body>{% block content %}{% endblock %}</body></html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+{% block description %}Learn more about {{ site.site_name }}{% endblock %}
+
+{% block content %}
+
+<!-- About section -->
+{% if about %}
+<section class="section-padding bg-white">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {% if about.image %}
+            <div class="rounded-2xl overflow-hidden shadow-lg order-2 lg:order-1">
+                <img src="{{ about.image.url }}" alt="{{ about.heading }}" class="w-full h-full object-cover">
+            </div>
+            {% endif %}
+            <div class="order-1 lg:order-2">
+                <h1 class="section-title">{{ about.heading }}</h1>
+                <div class="text-gray-600 leading-relaxed">
+                    {{ about.body|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Team section -->
+{% if team_members %}
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto text-center">
+        <h2 class="section-title">Our Team</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-4">
+            {% for member in team_members %}
+            <div class="flex flex-col items-center text-center">
+                {% if member.photo %}
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}"
+                         class="w-28 h-28 rounded-full object-cover mb-4 shadow-md">
+                {% else %}
+                    <div class="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                        <i class="bi bi-person text-5xl text-gray-400"></i>
+                    </div>
+                {% endif %}
+                <h3 class="font-semibold text-gray-900 text-lg">{{ member.name }}</h3>
+                <p class="text-primary text-sm mb-2">{{ member.role }}</p>
+                {% if member.bio %}
+                    <p class="text-gray-500 text-sm leading-relaxed">{{ member.bio }}</p>
+                {% endif %}
+                <div class="flex gap-3 mt-3 text-gray-400 text-lg">
+                    {% if member.facebook %}<a href="{{ member.facebook }}" target="_blank" class="hover:text-primary"><i class="bi bi-facebook"></i></a>{% endif %}
+                    {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank" class="hover:text-primary"><i class="bi bi-twitter-x"></i></a>{% endif %}
+                    {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" class="hover:text-primary"><i class="bi bi-linkedin"></i></a>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

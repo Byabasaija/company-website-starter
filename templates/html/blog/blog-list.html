@@ -6,63 +6,56 @@
 {% load custom_tags %}
 
 
-{% block title %}Blogs - {% endblock title %}
-{% block description %}Contains list of all the published blogs{% endblock description %}
-
-{% block socialTitle %}Blogs from {% endblock socialTitle %}
-{% block socialDescription %}Contains list of all the published blogs{% endblock socialDescription %}
-{% block pageType %}article{% endblock pageType %}
-{% comment %} {% block pageLink %}{% endblock pageLink %} {% endcomment %}
-{% block pageImage %}{% endblock pageImage %}
-
+{% block title %}Blogs{% endblock %}
+{% block description %}Contains list of all the published blogs{% endblock %}
 
 {% block content %}
 
-<div class="tw-flex tw-flex-col tw-h-full
-            tw-w-full  tw-place-items-center 
-            tw-p-3 tw-min-h-[100vh] md:tw-px-[15%]">
+<div class="flex flex-col h-full
+            w-full place-items-center
+            p-3 min-h-screen md:px-[15%]">
 
-    <h1 class="tw-w-full tw-mt-[5%] tw-text-3xl tw-font-medium tw-text-center">
+    <h1 class="w-full mt-[5%] text-3xl font-medium text-center">
         Blogs
     </h1>
-    
+
 
     {% if blogs|length == 0 %}
 
-        <div class="tw-w-full tw-mt-[10%] tw-flex tw-flex-col tw-text-center tw-text-xl tw-place-items-center">
-            <p class="tw-text-xl">No blogs yet.</p> 
+        <div class="w-full mt-[10%] flex flex-col text-center text-xl place-items-center">
+            <p class="text-xl">No blogs yet.</p>
         </div>
 
     {% endif %}
-    <div class="tw-mt-[5%]"></div>
-    <div class="tw-w-full tw-max-w-[950px]">
-        {% for blog in blogs  %}
-            <div class="tw-flex tw-gap-5 tw-place-content-center tw-mt-2
-                        tw-place-items-center max-md:tw-flex-col">
+    <div class="mt-[5%]"></div>
+    <div class="w-full max-w-[950px]">
+        {% for blog in blogs %}
+            <div class="flex gap-5 place-content-center mt-2
+                        place-items-center max-md:flex-col">
                 {% if blog.thumbnail %}
-                    <div class="tw-max-w-[350px]">
+                    <div class="max-w-[350px]">
                         <img src="{{blog.thumbnail.url}}">
                     </div>
                 {% endif %}
-                <a href="{% url 'get-blog' slug=blog.slug  %}" 
-                                            class="tw-text-md tw-w-full tw-h-full ">
-                    <div class="tw-text-3xl tw-w-full 
-                                max-md:tw-text-2xl tw-mt-2">
+                <a href="{% url 'get-blog' slug=blog.slug %}"
+                                            class="text-md w-full h-full">
+                    <div class="text-3xl w-full
+                                max-md:text-2xl mt-2">
                         <span>
                             <h2>
                                 {{blog.title}}
                             </h2>
                         </span>
-                    
+
                     </div>
-                    <div class="tw-mt-4 tw-mb-[2%] tw-w-full tw-p-2 tw-text-justify">
+                    <div class="mt-4 mb-[2%] w-full p-2 text-justify">
                         {% if blog.meta_description %}
-                            {{blog.meta_description}} <span class="!tw-text-blue-500" style="color: #3495eb;">continue reading...</span>
+                            {{blog.meta_description}} <span class="text-blue-500" style="color: #3495eb;">continue reading...</span>
                         {% else %}
-                            {{blog.body|strip_html_tags|slice:":300"|safe}} <span class="!tw-text-blue-500" style="color: #3495eb;">continue reading...</span>
+                            {{blog.body|strip_html_tags|slice:":300"|safe}} <span class="text-blue-500" style="color: #3495eb;">continue reading...</span>
                         {% endif %}
                     </div>
-                    <div class="tw-text-sm tw-text-gray-500 tw-text-right">
+                    <div class="text-sm text-gray-500 text-right">
                         {% utc_to_local blog.datetime request.COOKIES.user_timezone %}
                     </div>
                 </a>
@@ -73,13 +66,13 @@
     {% if blogs.has_previous or blogs.has_next %}
         <ul class="pagination">
             {% if blogs.has_previous %}
-                <a class="page-item " href="?page={{ blogs.previous_page_number }}">
+                <a class="page-item" href="?page={{ blogs.previous_page_number }}">
                     <i class="bi bi-chevron-double-left"></i>
                 </a>
             {% else %}
-                <li class="disabled page-item "><span class="page-link bi bi-chevron-double-left"></span></li>
+                <li class="disabled page-item"><span class="page-link bi bi-chevron-double-left"></span></li>
             {% endif %}
-            {% for i in page_range|default_if_none:blogs.paginator.get_elided_page_range  %}
+            {% for i in page_range|default_if_none:blogs.paginator.get_elided_page_range %}
                 {% if blogs.number == i %}
                     <li class="active page-item"><span class="page-link">{{ i }}</span>
                     </li>
@@ -103,7 +96,4 @@
 
 </div>
 
-
-
-{% endblock content %}
-
+{% endblock %}

@@ -1,1 +1,27 @@
-<!DOCTYPE html><html><head><title>Services</title></head><body>{% block content %}{% endblock %}</body></html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services{% endblock %}
+{% block description %}Services and programmes offered by {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="section-title text-center">Our Services</h1>
+        <p class="section-subtitle text-center">What we offer</p>
+        {% if services %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for service in services %}
+            <div class="card p-8 text-center hover:shadow-md transition-shadow">
+                <i class="bi {{ service.icon }} text-5xl text-primary mb-4 block"></i>
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">{{ service.title }}</h2>
+                <p class="text-gray-600 leading-relaxed">{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-gray-500 mt-10">No services listed yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
