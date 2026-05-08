@@ -1,7 +1,10 @@
-__pycache__
+__pycache__/
+*.pyc
 db.sqlite3
 media/
+staticfiles/
 .env
+.env.local
 firebase-cred.json
 encoded.txt
 
