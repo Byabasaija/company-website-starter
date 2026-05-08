@@ -14,3 +14,4 @@ django-phonenumber-field[phonenumberslite]==7.3.0
 whitenoise==6.7.0
 pillow==10.4.0
 gunicorn==22.0.0
+django-browser-reload==1.13.0
