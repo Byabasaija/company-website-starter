@@ -70,6 +70,7 @@ TEMPLATES = [
             ],
             'libraries': {
                 'custom_tags': 'project.templatetags.custom_tags',
+                'tailwind_tags': 'project.templatetags.tailwind_tags',
             },
         },
     },
