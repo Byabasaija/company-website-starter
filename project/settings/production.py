@@ -8,8 +8,9 @@ environ.Env.read_env(BASE_DIR / '.env')
 DEBUG = False
 SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').replace(' ', '').split(',')
-CORS_ALLOWED_ORIGINS = env('ALLOWED_CORS', default='').replace(' ', '').split(',')
-CSRF_TRUSTED_ORIGINS = env('ALLOWED_CORS', default='').replace(' ', '').split(',')
+_cors_raw = env('ALLOWED_CORS', default='').replace(' ', '')
+CORS_ALLOWED_ORIGINS = [o for o in _cors_raw.split(',') if o]
+CSRF_TRUSTED_ORIGINS = [o for o in _cors_raw.split(',') if o]
 
 DATABASES = {'default': dj_database_url.config(default=env('DATABASE_URL'))}
 
