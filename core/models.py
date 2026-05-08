@@ -139,3 +139,29 @@ class Partner(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class NavLink(models.Model):
+    label     = models.CharField(max_length=50)
+    url       = models.CharField(max_length=200)
+    order     = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.label
+
+
+class FooterLink(models.Model):
+    label     = models.CharField(max_length=50)
+    url       = models.CharField(max_length=200)
+    order     = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.label

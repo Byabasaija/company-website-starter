@@ -1,5 +1,5 @@
 from django.test import TestCase
-from core.models import SiteConfig, HomepageSection, HeroSection, AboutSection, TeamMember, Service, Testimonial, Partner
+from core.models import SiteConfig, HomepageSection, HeroSection, AboutSection, TeamMember, Service, Testimonial, Partner, NavLink, FooterLink
 
 
 class SiteConfigSingletonTest(TestCase):
@@ -18,6 +18,9 @@ class SiteConfigSingletonTest(TestCase):
 
 class HomepageSectionOrderingTest(TestCase):
 
+    def setUp(self):
+        HomepageSection.objects.all().delete()
+
     def test_sections_ordered_by_order_field(self):
         HomepageSection.objects.create(section_type='about', order=2, is_active=True)
         HomepageSection.objects.create(section_type='hero', order=1, is_active=True)
@@ -34,6 +37,9 @@ class HomepageSectionOrderingTest(TestCase):
 
 
 class HeroSectionTest(TestCase):
+    def setUp(self):
+        HeroSection.objects.all().delete()
+
     def test_create_hero(self):
         hero = HeroSection.objects.create(
             headline='Welcome',
@@ -56,3 +62,17 @@ class TeamMemberTest(TestCase):
         TeamMember.objects.create(name='Active', role='CEO', order=1, is_active=True)
         TeamMember.objects.create(name='Inactive', role='CFO', order=2, is_active=False)
         self.assertEqual(TeamMember.objects.filter(is_active=True).count(), 1)
+
+
+class NavLinkTest(TestCase):
+    def setUp(self):
+        NavLink.objects.all().delete()
+
+    def test_active_links_ordered(self):
+        NavLink.objects.create(label='Contact', url='/contact/', order=3, is_active=True)
+        NavLink.objects.create(label='Home', url='/', order=1, is_active=True)
+        NavLink.objects.create(label='Hidden', url='/hidden/', order=2, is_active=False)
+        active = list(NavLink.objects.filter(is_active=True))
+        self.assertEqual(len(active), 2)
+        self.assertEqual(active[0].label, 'Home')
+        self.assertEqual(active[1].label, 'Contact')
