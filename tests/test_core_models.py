@@ -1,5 +1,5 @@
 from django.test import TestCase
-from core.models import SiteConfig, HomepageSection
+from core.models import SiteConfig, HomepageSection, HeroSection, AboutSection, TeamMember, Service, Testimonial, Partner
 
 
 class SiteConfigSingletonTest(TestCase):
@@ -31,3 +31,28 @@ class HomepageSectionOrderingTest(TestCase):
         active = HomepageSection.objects.filter(is_active=True)
         self.assertEqual(active.count(), 1)
         self.assertEqual(active.first().section_type, 'hero')
+
+
+class HeroSectionTest(TestCase):
+    def test_create_hero(self):
+        hero = HeroSection.objects.create(
+            headline='Welcome',
+            subheadline='We are here',
+            cta_text='Learn more',
+            cta_url='/about/',
+        )
+        self.assertEqual(HeroSection.objects.count(), 1)
+        self.assertEqual(hero.headline, 'Welcome')
+
+
+class TeamMemberTest(TestCase):
+    def test_team_members_ordered_by_order_field(self):
+        TeamMember.objects.create(name='Bob', role='CEO', order=2, is_active=True)
+        TeamMember.objects.create(name='Alice', role='CTO', order=1, is_active=True)
+        members = list(TeamMember.objects.filter(is_active=True))
+        self.assertEqual(members[0].name, 'Alice')
+
+    def test_inactive_members_excluded(self):
+        TeamMember.objects.create(name='Active', role='CEO', order=1, is_active=True)
+        TeamMember.objects.create(name='Inactive', role='CFO', order=2, is_active=False)
+        self.assertEqual(TeamMember.objects.filter(is_active=True).count(), 1)
