@@ -1,0 +1,26 @@
+{% load static %}
+{% if hero %}
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white">
+
+    {% if hero.background_image %}
+        <img src="{{ hero.background_image.url }}" alt=""
+             class="absolute inset-0 w-full h-full object-cover opacity-40">
+    {% endif %}
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
+            {{ hero.headline }}
+        </h1>
+        {% if hero.subheadline %}
+        <p class="text-xl lg:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            {{ hero.subheadline }}
+        </p>
+        {% endif %}
+        <a href="{{ hero.cta_url }}"
+           class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-4 rounded-xl transition-colors duration-200 text-lg">
+            {{ hero.cta_text }}
+            <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+</section>
+{% endif %}

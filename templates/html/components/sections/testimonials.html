@@ -1,0 +1,42 @@
+{% if testimonials %}
+<section class="section-padding bg-primary text-white"
+         x-data="{ current: 0, total: {{ testimonials|length }} }"
+         x-init="setInterval(() => current = (current + 1) % total, 5000)">
+    <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-12">What People Say</h2>
+        <div class="relative overflow-hidden min-h-[200px]">
+            {% for testimonial in testimonials %}
+            <div x-show="current === {{ forloop.counter0 }}"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 translate-x-4"
+                 x-transition:enter-end="opacity-100 translate-x-0"
+                 class="absolute inset-0 flex flex-col items-center gap-4 px-4">
+                {% if testimonial.photo %}
+                    <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}"
+                         class="w-16 h-16 rounded-full object-cover border-2 border-white/30">
+                {% endif %}
+                <blockquote class="text-xl italic text-white/90 leading-relaxed">
+                    "{{ testimonial.quote }}"
+                </blockquote>
+                <cite class="not-italic">
+                    <span class="font-semibold">{{ testimonial.name }}</span>
+                    {% if testimonial.role or testimonial.organization %}
+                        <span class="text-white/70"> — {{ testimonial.role }}{% if testimonial.organization %}, {{ testimonial.organization }}{% endif %}</span>
+                    {% endif %}
+                </cite>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Dots -->
+        <div class="flex justify-center gap-2 mt-16">
+            {% for testimonial in testimonials %}
+            <button @click="current = {{ forloop.counter0 }}"
+                    class="w-2.5 h-2.5 rounded-full transition-colors"
+                    :class="current === {{ forloop.counter0 }} ? 'bg-white' : 'bg-white/30'"
+                    aria-label="Testimonial {{ forloop.counter }}">
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

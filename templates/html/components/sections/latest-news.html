@@ -1,0 +1,33 @@
+{% load static %}
+{% if latest_blogs %}
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-10">
+            <h2 class="section-title mb-0">Latest News</h2>
+            <a href="/blog/" class="text-primary font-semibold hover:underline text-sm flex items-center gap-1">
+                All posts <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for blog in latest_blogs %}
+            <a href="{% url 'get-blog' slug=blog.slug %}" class="card hover:shadow-md transition-shadow group">
+                {% if blog.thumbnail %}
+                <div class="aspect-video overflow-hidden">
+                    <img src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="font-semibold text-gray-900 text-lg mb-2 group-hover:text-primary transition-colors">
+                        {{ blog.title }}
+                    </h3>
+                    <p class="text-gray-500 text-sm">
+                        {{ blog.datetime|date:"N j, Y" }}
+                    </p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

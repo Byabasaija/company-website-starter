@@ -1,0 +1,20 @@
+{% if partners %}
+<section class="section-padding bg-white">
+    <div class="max-w-7xl mx-auto text-center">
+        <h2 class="section-title">Our Partners</h2>
+        <div class="flex flex-wrap justify-center items-center gap-10 mt-8">
+            {% for partner in partners %}
+            {% if partner.website_url %}
+            <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer"
+               class="opacity-60 hover:opacity-100 transition-opacity">
+                <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" class="h-12 w-auto object-contain">
+            </a>
+            {% else %}
+            <img src="{{ partner.logo.url }}" alt="{{ partner.name }}"
+                 class="h-12 w-auto object-contain opacity-60">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
