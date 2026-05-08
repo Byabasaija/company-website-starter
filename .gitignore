@@ -4,3 +4,7 @@ media/
 .env
 firebase-cred.json
 encoded.txt
+
+# Tailwind standalone binary
+bin/tailwindcss
+bin/tailwindcss.exe
