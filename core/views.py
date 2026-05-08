@@ -35,4 +35,4 @@ def services_view(request):
 
 
 def team_redirect(request):
-    return redirect('/about/')
+    return redirect('about')

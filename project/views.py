@@ -23,7 +23,3 @@ def handler_403(request, exception=None):
     if isinstance(exception, Ratelimited):
         return HttpResponse('Sorry too many requests, please wait', status=429)
     return HttpResponseForbidden('Forbidden')
-
-
-def home_view(request):
-    return render(request, 'home.html', status=200)
