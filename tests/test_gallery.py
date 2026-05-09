@@ -47,3 +47,21 @@ class GalleryViewTest(TestCase):
         response = self.client.get('/gallery/')
         self.assertIn('images', response.context)
         self.assertIn('categories', response.context)
+
+
+class GalleryLightboxTest(TestCase):
+
+    def setUp(self):
+        cat = make_category('Test')
+        GalleryImage.objects.create(
+            category=cat, image='gallery/test.jpg', order=1, is_active=True
+        )
+
+    def test_gallery_page_has_lightbox_show_handler(self):
+        response = self.client.get('/gallery/')
+        self.assertContains(response, '@click="show(')
+
+    def test_gallery_page_has_lightbox_overlay(self):
+        response = self.client.get('/gallery/')
+        self.assertContains(response, 'fixed inset-0')
+        self.assertContains(response, ':src="src"')
