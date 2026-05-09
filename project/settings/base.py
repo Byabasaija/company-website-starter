@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'user',
     'blog',
     'inquiry',
+    'events',
+    'gallery',
+    'faq',
 ]
 
 SITE_ID = 1

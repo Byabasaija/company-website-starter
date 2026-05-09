@@ -8,6 +8,7 @@ from django.shortcuts import render
 
 from project.sitemaps import StaticSitemap
 from blog.sitemaps import BlogSitemap
+from events.sitemaps import EventSitemap
 from project.views import rate_limiter_view, view_404, handler_403
 
 admin.site.site_header = 'Site Admin'
@@ -18,7 +19,7 @@ admin.site.site_url = '/'
 handler404 = view_404
 handler403 = handler_403
 
-sitemap_dict = {'sitemaps': {'static': StaticSitemap, 'blog': BlogSitemap}}
+sitemap_dict = {'sitemaps': {'static': StaticSitemap, 'blog': BlogSitemap, 'events': EventSitemap}}
 
 urlpatterns = [
     path('admin/',   admin.site.urls),
@@ -26,6 +27,9 @@ urlpatterns = [
     path('blog/',    include('blog.urls')),
     path('contact/', include('inquiry.urls')),
     path('user/',    include('user.urls')),
+    path('events/',  include('events.urls')),
+    path('gallery/', include('gallery.urls')),
+    path('faq/',     include('faq.urls')),
 
     path('sitemap.xml', sitemap, sitemap_dict, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
