@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.html import format_html
 
 
 class TrixWidget(forms.Textarea):
@@ -7,11 +8,12 @@ class TrixWidget(forms.Textarea):
         field_id = attrs.get('id', f'id_{name}')
         attrs['hidden'] = True
         textarea = super().render(name, value, attrs, renderer)
-        return (
-            f'{textarea}'
-            f'<trix-editor input="{field_id}" '
-            f'class="trix-content border border-gray-300 rounded-lg min-h-[200px] p-2">'
-            f'</trix-editor>'
+        return format_html(
+            '{}<trix-editor input="{}" '
+            'class="trix-content border border-gray-300 rounded-lg min-h-[200px] p-2">'
+            '</trix-editor>',
+            textarea,
+            field_id,
         )
 
     class Media:
