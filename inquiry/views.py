@@ -1,4 +1,6 @@
-import requests as http_requests
+import json
+import urllib.parse
+import urllib.request
 from django.conf import settings
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
@@ -16,11 +18,14 @@ def _verify_recaptcha(token):
     if not token:
         return False
     try:
-        resp = http_requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={'secret': settings.RECAPTCHA_SECRET_KEY, 'response': token},
-            timeout=5,
-        ).json()
+        data = urllib.parse.urlencode({
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': token,
+        }).encode()
+        with urllib.request.urlopen(
+            'https://www.google.com/recaptcha/api/siteverify', data, timeout=5
+        ) as r:
+            resp = json.loads(r.read().decode())
         return resp.get('success') and resp.get('score', 0) >= 0.5
     except Exception:
         return False
