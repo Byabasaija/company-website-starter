@@ -11,7 +11,7 @@
             <div>
                 <h2 class="section-title">{{ about.heading }}</h2>
                 <div class="text-gray-600 leading-relaxed">
-                    {{ about.body|linebreaks }}
+                    {{ about.body|safe }}
                 </div>
                 <a href="/about/" class="inline-flex items-center gap-2 mt-8 text-primary font-semibold hover:gap-3 transition-all">
                     Read more <i class="bi bi-arrow-right"></i>

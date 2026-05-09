@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}{{ event.title }}{% endblock %}
-{% block description %}{{ event.description|truncatewords:30 }}{% endblock %}
+{% block description %}{{ event.description|striptags|truncatewords:30 }}{% endblock %}
 {% block og_title %}{{ event.title }}{% endblock %}
 {% block og_image %}{% if event.thumbnail %}{{ request.scheme }}://{{ request.get_host }}{{ event.thumbnail.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
