@@ -1,6 +1,22 @@
+from django import forms
 from django.contrib import admin
 from .models import (SiteConfig, HomepageSection, HeroSection, AboutSection,
                      TeamMember, Service, Testimonial, Partner, NavLink, FooterLink)
+from .widgets import TrixWidget
+
+
+class AboutSectionAdminForm(forms.ModelForm):
+    class Meta:
+        model = AboutSection
+        fields = '__all__'
+        widgets = {'body': TrixWidget()}
+
+
+class ServiceAdminForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = '__all__'
+        widgets = {'description': TrixWidget()}
 
 
 @admin.register(SiteConfig)
@@ -34,7 +50,7 @@ class HeroSectionAdmin(admin.ModelAdmin):
 
 @admin.register(AboutSection)
 class AboutSectionAdmin(admin.ModelAdmin):
-    pass
+    form = AboutSectionAdminForm
 
 
 @admin.register(TeamMember)
@@ -45,6 +61,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
+    form          = ServiceAdminForm
     list_display  = ('title', 'icon', 'order', 'is_active')
     list_editable = ('order', 'is_active')
 

@@ -19,7 +19,7 @@
             <div class="order-1 lg:order-2">
                 <h1 class="section-title">{{ about.heading }}</h1>
                 <div class="text-gray-600 leading-relaxed">
-                    {{ about.body|linebreaks }}
+                    {{ about.body|safe }}
                 </div>
             </div>
         </div>
