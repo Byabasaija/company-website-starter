@@ -59,4 +59,13 @@
 
     document.querySelectorAll('#editor pre code').forEach(el => hljs.highlightElement(el));
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ blog.title }}",
+  "datePublished": "{{ blog.datetime|date:'c' }}",
+  "url": "{{ request.build_absolute_uri }}"
+}
+</script>
 {% endblock %}

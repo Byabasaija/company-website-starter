@@ -3,6 +3,8 @@
 
 {% block title %}{{ event.title }}{% endblock %}
 {% block description %}{{ event.description|truncatewords:30 }}{% endblock %}
+{% block og_title %}{{ event.title }}{% endblock %}
+{% block og_image %}{% if event.thumbnail %}{{ request.scheme }}://{{ request.get_host }}{{ event.thumbnail.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block content %}
 <article class="section-padding">
@@ -44,4 +46,18 @@
         </div>
     </div>
 </article>
+{% endblock %}
+
+{% block scripts %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{ event.title }}",
+  "startDate": "{{ event.start_date|date:'c' }}"{% if event.end_date %},
+  "endDate": "{{ event.end_date|date:'c' }}"{% endif %}{% if event.location %},
+  "location": { "@type": "Place", "name": "{{ event.location }}" }{% endif %},
+  "url": "{{ request.build_absolute_uri }}"
+}
+</script>
 {% endblock %}
