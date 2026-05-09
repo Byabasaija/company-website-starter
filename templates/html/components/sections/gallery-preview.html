@@ -1,8 +1,23 @@
-{# Stub — filled in Plan B (gallery app) #}
+{% load static %}
 {% if gallery_images %}
 <section class="section-padding bg-surface">
-    <div class="max-w-7xl mx-auto text-center">
-        <h2 class="section-title">Gallery</h2>
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-10">
+            <h2 class="section-title mb-0">Gallery</h2>
+            <a href="/gallery/" class="text-primary font-semibold hover:underline text-sm flex items-center gap-1">
+                View all <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {% for image in gallery_images %}
+            <a href="/gallery/" class="aspect-square overflow-hidden rounded-xl shadow-sm group">
+                <img src="{{ image.image.url }}"
+                     alt="{{ image.caption|default:'' }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                     loading="lazy">
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </section>
 {% endif %}

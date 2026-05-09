@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery{% endblock %}
+{% block description %}Photo gallery from {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section-padding"
+         x-data="{ filter: 'all' }">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="section-title text-center">Gallery</h1>
+
+        {% if categories %}
+        <div class="flex flex-wrap justify-center gap-2 mb-10">
+            <button @click="filter = 'all'"
+                    :class="filter === 'all' ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-300 hover:border-primary hover:text-primary'"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                All
+            </button>
+            {% for category in categories %}
+            <button @click="filter = '{{ category.slug }}'"
+                    :class="filter === '{{ category.slug }}' ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-300 hover:border-primary hover:text-primary'"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                {{ category.name }}
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if images %}
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for image in images %}
+            <div x-show="filter === 'all' || filter === '{{ image.category.slug }}'"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 class="aspect-square overflow-hidden rounded-xl shadow-sm group">
+                <img src="{{ image.image.url }}"
+                     alt="{{ image.caption|default:image.category.name }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                     loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-gray-500 py-16">No images yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
