@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'events',
     'gallery',
     'faq',
+    'newsletter',
 ]
 
 SITE_ID = 1

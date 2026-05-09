@@ -1,0 +1,15 @@
+<section class="section-padding bg-primary text-white">
+    <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-3">Stay Updated</h2>
+        <p class="text-blue-100 mb-8">Subscribe to our newsletter and never miss an update.</p>
+        <form method="post" action="{% url 'newsletter-subscribe' %}"
+              class="flex flex-col sm:flex-row gap-3 justify-center">
+            {% csrf_token %}
+            <input type="email" name="email" required placeholder="Your email address"
+                   class="input flex-1 max-w-sm bg-white text-gray-900">
+            <button type="submit" class="btn-outline border-white text-white hover:bg-white hover:text-primary whitespace-nowrap">
+                Subscribe
+            </button>
+        </form>
+    </div>
+</section>

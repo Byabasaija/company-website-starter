@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Subscribe to Newsletter{% endblock %}
+{% block description %}Stay updated with the latest news from {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="max-w-lg mx-auto text-center">
+        <h1 class="section-title">Stay in the Loop</h1>
+        <p class="section-subtitle">Get the latest news and updates delivered to your inbox.</p>
+        <form method="post" class="mt-8 flex flex-col sm:flex-row gap-3">
+            {% csrf_token %}
+            <input type="email" name="email" required placeholder="Your email address"
+                   class="input flex-1">
+            <button type="submit" class="btn-primary whitespace-nowrap">Subscribe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
