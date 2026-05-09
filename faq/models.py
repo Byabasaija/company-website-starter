@@ -1,0 +1,16 @@
+from django.db import models
+
+
+class FAQItem(models.Model):
+    question  = models.CharField(max_length=300)
+    answer    = models.TextField()
+    order     = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering            = ['order']
+        verbose_name        = 'FAQ Item'
+        verbose_name_plural = 'FAQ Items'
+
+    def __str__(self):
+        return self.question
