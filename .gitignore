@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+*.pyo
 db.sqlite3
 media/
 staticfiles/
@@ -11,3 +12,6 @@ encoded.txt
 # Tailwind standalone binary
 bin/tailwindcss
 bin/tailwindcss.exe
+
+# IDE
+.idea/

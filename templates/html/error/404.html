@@ -1,18 +1,17 @@
-{% extends './html/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="tw-flex tw-flex-col tw-min-h-[100vh] tw-p-3 tw-place-items-center tw-gap-4">
+{% block title %}Page Not Found{% endblock %}
 
-    <img src="{% static "./assets/images/404.png" %}" class="tw-max-w-[auto] tw-max-h-[400px]" alt="" srcset="">
-    <div class="tw-text-3xl tw-font-bold">
-        404 page
+{% block content %}
+<section class="section-padding min-h-[calc(100vh-4rem)] flex items-center justify-center">
+    <div class="text-center max-w-md mx-auto">
+        <img src="{% static './assets/images/404.png' %}" alt="404" class="max-h-64 mx-auto mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-3">Page Not Found</h1>
+        <p class="text-gray-500 mb-8">Sorry, the page you're looking for doesn't exist or has been moved.</p>
+        <a href="{% url 'home' %}" class="btn-primary inline-flex items-center gap-2">
+            Go Home <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
-    <div class="tw-text-xl">
-        Sorry doggy ate this page. Please go back to home.
-    </div>
-    <a href="{% url "home" %}" class="btn btn-dark">
-        Go home
-    </a>
-</div>
-{% endblock content %}
+</section>
+{% endblock %}

@@ -1,99 +1,83 @@
 {% extends 'base.html' %}
-
-{% load tz %}
 {% load static %}
-
 {% load custom_tags %}
 
-
-{% block title %}Blogs{% endblock %}
-{% block description %}Contains list of all the published blogs{% endblock %}
+{% block title %}Blog{% endblock %}
+{% block description %}News, updates and insights from {{ site.site_name }}{% endblock %}
 
 {% block content %}
+<section class="section-padding">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="section-title text-center">Blog</h1>
+        <p class="section-subtitle text-center">News, updates and insights</p>
 
-<div class="flex flex-col h-full
-            w-full place-items-center
-            p-3 min-h-screen md:px-[15%]">
-
-    <h1 class="w-full mt-[5%] text-3xl font-medium text-center">
-        Blogs
-    </h1>
-
-
-    {% if blogs|length == 0 %}
-
-        <div class="w-full mt-[10%] flex flex-col text-center text-xl place-items-center">
-            <p class="text-xl">No blogs yet.</p>
+        {% if not blogs %}
+        <div class="text-center text-gray-500 py-16">
+            <i class="bi bi-journal text-6xl text-gray-200 block mb-4"></i>
+            <p class="text-xl">No posts published yet.</p>
+        </div>
+        {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
+            {% for blog in blogs %}
+            <a href="{% url 'get-blog' slug=blog.slug %}" class="card hover:shadow-md transition-shadow group">
+                {% if blog.thumbnail %}
+                <div class="aspect-video overflow-hidden">
+                    <img src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                {% endif %}
+                <div class="p-6">
+                    <h2 class="font-semibold text-gray-900 text-lg mb-2 group-hover:text-primary transition-colors leading-snug">
+                        {{ blog.title }}
+                    </h2>
+                    <p class="text-gray-400 text-sm mb-3">{{ blog.datetime|date:"N j, Y" }}</p>
+                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                        {{ blog.body|strip_html_tags|slice:":200" }}
+                    </p>
+                </div>
+            </a>
+            {% endfor %}
         </div>
 
-    {% endif %}
-    <div class="mt-[5%]"></div>
-    <div class="w-full max-w-[950px]">
-        {% for blog in blogs %}
-            <div class="flex gap-5 place-content-center mt-2
-                        place-items-center max-md:flex-col">
-                {% if blog.thumbnail %}
-                    <div class="max-w-[350px]">
-                        <img src="{{blog.thumbnail.url}}">
-                    </div>
-                {% endif %}
-                <a href="{% url 'get-blog' slug=blog.slug %}"
-                                            class="text-md w-full h-full">
-                    <div class="text-3xl w-full
-                                max-md:text-2xl mt-2">
-                        <span>
-                            <h2>
-                                {{blog.title}}
-                            </h2>
-                        </span>
-
-                    </div>
-                    <div class="mt-4 mb-[2%] w-full p-2 text-justify">
-                        {% if blog.meta_description %}
-                            {{blog.meta_description}} <span class="text-blue-500" style="color: #3495eb;">continue reading...</span>
-                        {% else %}
-                            {{blog.body|strip_html_tags|slice:":300"|safe}} <span class="text-blue-500" style="color: #3495eb;">continue reading...</span>
-                        {% endif %}
-                    </div>
-                    <div class="text-sm text-gray-500 text-right">
-                        {% utc_to_local blog.datetime request.COOKIES.user_timezone %}
-                    </div>
-                </a>
-            </div>
-            <hr>
-        {% endfor %}
-    </div>
-    {% if blogs.has_previous or blogs.has_next %}
-        <ul class="pagination">
+        {% if blogs.has_previous or blogs.has_next %}
+        <div class="flex justify-center items-center gap-2 mt-12">
             {% if blogs.has_previous %}
-                <a class="page-item" href="?page={{ blogs.previous_page_number }}">
-                    <i class="bi bi-chevron-double-left"></i>
-                </a>
+            <a href="?page={{ blogs.previous_page_number }}"
+               class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:border-primary hover:text-primary transition-colors">
+                <i class="bi bi-chevron-left"></i>
+            </a>
             {% else %}
-                <li class="disabled page-item"><span class="page-link bi bi-chevron-double-left"></span></li>
+            <span class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-300">
+                <i class="bi bi-chevron-left"></i>
+            </span>
             {% endif %}
-            {% for i in page_range|default_if_none:blogs.paginator.get_elided_page_range %}
+
+            {% for i in blogs.paginator.get_elided_page_range %}
                 {% if blogs.number == i %}
-                    <li class="active page-item"><span class="page-link">{{ i }}</span>
-                    </li>
+                <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-medium text-sm">{{ i }}</span>
+                {% elif i == blogs.paginator.ELLIPSIS %}
+                <span class="w-10 h-10 flex items-center justify-center text-gray-400">…</span>
                 {% else %}
-                    {% if i == blogs.paginator.ELLIPSIS %}
-                        <li class="page-item"><span class="page-link">{{ i }}</span></li>
-                    {% else %}
-                        <a class="page-item" href="?page={{ i }}">{{ i }}</a>
-                    {% endif %}
+                <a href="?page={{ i }}"
+                   class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:border-primary hover:text-primary transition-colors text-sm">
+                    {{ i }}
+                </a>
                 {% endif %}
             {% endfor %}
+
             {% if blogs.has_next %}
-                <a class="page-item" href="?page={{ blogs.next_page_number }}">
-                    <i class="bi bi-chevron-double-right"></i>
-                </a>
+            <a href="?page={{ blogs.next_page_number }}"
+               class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:border-primary hover:text-primary transition-colors">
+                <i class="bi bi-chevron-right"></i>
+            </a>
             {% else %}
-                <li class="disabled page-item"><span class="page-link bi bi-chevron-double-right"></span></li>
+            <span class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-100 text-gray-300">
+                <i class="bi bi-chevron-right"></i>
+            </span>
             {% endif %}
-        </ul>
-    {% endif %}
-
-</div>
-
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</section>
 {% endblock %}

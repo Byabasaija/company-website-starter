@@ -1,123 +1,73 @@
 {% extends 'base.html' %}
-{% load custom_tags %}
-{% load tz %}
 {% load static %}
+{% load custom_tags %}
 
-{% block title %}Contact us Form{% endblock %}
-{% block description %}Contact us{% endblock %}
+{% block title %}Contact Us{% endblock %}
+{% block description %}Get in touch with {{ site.site_name }}{% endblock %}
 
 {% block content %}
+<section class="section-padding min-h-[calc(100vh-4rem)] flex items-center">
+    <div class="max-w-2xl mx-auto w-full">
 
-    <section class="w-full flex
-                    flex-col
-                    place-content-center
-                    px-[10%]
-                    p-4
-                    gap-5
-                    min-h-screen
-                    place-items-center
-                    max-md:flex-col
-                    overflow-hidden
-                    ">
+        <div class="mb-10">
+            <h1 class="section-title">Get in Touch</h1>
+            <p class="section-subtitle">
+                We'd love to hear from you. Fill in the form and we'll get back to you shortly.
+            </p>
+        </div>
 
-            <form
-                method="POST"
-                action="{% url "contact-us" %}"
-                onsubmit="return onSubmit(event)"
-                class="flex flex-col gap-[5%] h-full mt-[5%]"
-            >
-                {% if errors %}
-                    <div class="error-container m-2">{{errors}}</div>
-                {% endif %} {% csrf_token %}
+        <form method="POST" action="{% url 'contact-us' %}" onsubmit="return onSubmit(event)"
+              class="card p-8 flex flex-col gap-5">
+            {% csrf_token %}
 
-                <div class="flex flex-col gap-2">
-                    <h2 class="text-5xl max-md:text-xl font-medium">
-                        Contact us
-                    </h2>
-                    <h3 class="text-3xl max-md:text-3xl">
-                        Get in touch
-                    </h3>
+            {% if errors %}
+            <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+                {{ errors }}
+            </div>
+            {% endif %}
+
+            <div class="flex flex-col gap-1.5">
+                <label for="name" class="text-sm font-medium text-gray-700">Name</label>
+                <input type="text" id="name" name="name" class="input" maxlength="30" required
+                       value="{{ data.name }}" placeholder="Your full name">
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-gray-700">Phone</label>
+                <div class="flex gap-2">
+                    <select name="country-codes" id="country-codes" class="input w-32 shrink-0"></select>
+                    <input type="text" name="phone-number" class="input" maxlength="15" required
+                           value="{{ data.phone|phone_number }}" placeholder="Phone number">
                 </div>
-                <div
-                    class="max-w-[550px] min-w-[450px] max-md:min-w-[300px] mt-4 flex flex-col gap-3"
-                >
-                    <div class="flex flex-col gap-4">
-                        <div class="flex flex-col gap-1">
-                            <div class="text-gray-500">Name</div>
-                            <input
-                                type="text"
-                                class="input"
-                                name="name"
-                                maxlength="30"
-                                required
-                                value="{{data.name}}"
-                                placeholder="name"
-                            />
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <div class="text-gray-500">Phone</div>
-                            <div class="flex gap-1 w-full place-content-center">
-                                <select
-                                    name="country-codes"
-                                    id="country-codes"
-                                    class="input min-w-[10%]"
-                                ></select>
-                                <input
-                                    type="text"
-                                    class="input w-[70%]"
-                                    maxlength="15"
-                                    required
-                                    value="{{data.phone|phone_number}}"
-                                    name="phone-number"
-                                    placeholder="phone"
-                                />
-                                <input type="hidden" value="{{data.phone}}" name="phone" value="" />
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <div class="text-gray-500">Email</div>
-                            <input
-                                type="email"
-                                class="input"
-                                required
-                                name="email"
-                                maxlength="250"
-                                placeholder="email"
-                                value="{{data.email}}"
-                                id="email"
-                            />
-                        </div>
+                <input type="hidden" name="phone" value="{{ data.phone }}">
+            </div>
 
-                        <div class="flex flex-col w-full gap-2">
-                            <div class="text-gray-500">Enquiry</div>
-                            <textarea
-                                class="input resize-y w-full max-h-[250px] min-h-[40px]"
-                                name="description"
-                                maxlength="1200"
-                                required
-                                value="{{data.description}}"
-                                placeholder="enquiry"
-                            >{{data.description}}</textarea>
-                        </div>
-                    </div>
+            <div class="flex flex-col gap-1.5">
+                <label for="email" class="text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" class="input" maxlength="250" required
+                       value="{{ data.email }}" placeholder="you@example.com">
+            </div>
 
-                    <button
-                        type="submit"
-                        class="btn transition-transform hover:translate-x-2 duration-[0.3s] mt-5 ml-auto"
-                    >
-                        <span>Submit</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </div>
-            </form>
+            <div class="flex flex-col gap-1.5">
+                <label for="description" class="text-sm font-medium text-gray-700">Enquiry</label>
+                <textarea id="description" name="description"
+                          class="input resize-y min-h-[120px] max-h-[300px]"
+                          maxlength="1200" required
+                          placeholder="Tell us how we can help…">{{ data.description }}</textarea>
+            </div>
 
-    </section>
+            <div class="flex justify-end mt-2">
+                <button type="submit" class="btn-primary flex items-center gap-2">
+                    Send Message
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </form>
 
-
+    </div>
+</section>
 {% endblock %}
 
 {% block scripts %}
-
-    <script src="{% static "./js/inquiry/inquiry.js" %}"></script>
-
+<script src="{% static './js/inquiry/inquiry.js' %}"></script>
 {% endblock %}
