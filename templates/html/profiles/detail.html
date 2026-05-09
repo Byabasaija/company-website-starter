@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile.name }}{% endblock %}
+{% block description %}{{ profile.role }} at {{ site.site_name }}{% endblock %}
+{% block og_title %}{{ profile.name }} — {{ profile.role }}{% endblock %}
+{% block og_image %}{% if profile.photo %}{{ request.scheme }}://{{ request.get_host }}{{ profile.photo.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Back link -->
+        <a href="{% url 'profile-list' %}"
+           class="inline-flex items-center gap-1 text-sm text-primary font-medium hover:underline mb-8">
+            <i class="bi bi-arrow-left"></i> All People
+        </a>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+            <!-- Sidebar -->
+            <aside class="flex flex-col items-center md:items-start gap-4">
+                {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="{{ profile.name }}"
+                     class="w-40 h-40 rounded-2xl object-cover shadow-lg">
+                {% else %}
+                <div class="w-40 h-40 rounded-2xl bg-gray-100 flex items-center justify-center">
+                    <i class="bi bi-person text-7xl text-gray-400"></i>
+                </div>
+                {% endif %}
+
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ profile.name }}</h1>
+                    <p class="text-primary font-medium mt-1">{{ profile.role }}</p>
+                    <span class="inline-block mt-2 text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                        {{ profile.category.name }}
+                    </span>
+                </div>
+
+                <!-- Contact -->
+                {% if profile.email or profile.phone %}
+                <div class="flex flex-col gap-2 text-sm text-gray-600 w-full">
+                    {% if profile.email %}
+                    <a href="mailto:{{ profile.email }}"
+                       class="flex items-center gap-2 hover:text-primary transition-colors">
+                        <i class="bi bi-envelope"></i> {{ profile.email }}
+                    </a>
+                    {% endif %}
+                    {% if profile.phone %}
+                    <span class="flex items-center gap-2">
+                        <i class="bi bi-telephone"></i> {{ profile.phone }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Social -->
+                {% if profile.facebook or profile.twitter or profile.linkedin %}
+                <div class="flex gap-3 text-xl text-gray-400">
+                    {% if profile.facebook %}
+                    <a href="{{ profile.facebook }}" target="_blank" rel="noopener noreferrer"
+                       class="hover:text-primary transition-colors" aria-label="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile.twitter %}
+                    <a href="{{ profile.twitter }}" target="_blank" rel="noopener noreferrer"
+                       class="hover:text-primary transition-colors" aria-label="Twitter">
+                        <i class="bi bi-twitter-x"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile.linkedin %}
+                    <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer"
+                       class="hover:text-primary transition-colors" aria-label="LinkedIn">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </aside>
+
+            <!-- Bio -->
+            <div class="md:col-span-2">
+                {% if profile.bio %}
+                <div class="prose prose-gray max-w-none text-gray-700 leading-relaxed">
+                    {{ profile.bio|safe }}
+                </div>
+                {% else %}
+                <p class="text-gray-500 italic">No biography available.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
