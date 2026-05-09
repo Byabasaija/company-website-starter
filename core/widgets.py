@@ -12,8 +12,21 @@ class _TrixCSS:
         return '<link href="https://cdn.jsdelivr.net/npm/trix@2.1.1/dist/trix.min.css" rel="stylesheet">'
 
 
+class _TrixAdminCSS:
+    """Fixes Django admin flexbox layout collapsing the Trix editor."""
+    def __html__(self):
+        return (
+            '<style>'
+            '.flex-container:has(trix-editor){display:block !important;}'
+            '.field-body .flex-container{display:block !important;}'
+            'trix-editor{min-height:200px;border:1px solid #ccc;border-radius:4px;padding:8px;}'
+            'trix-toolbar .trix-button{background-color:#d1d1d1 !important;}'
+            '</style>'
+        )
+
+
 class _TrixNoUploadJS:
-    """Disables file attachment in Trix and hides the attach button."""
+    """Disables file attachment and hides the attach button."""
     def __html__(self):
         return (
             '<script>'
@@ -28,7 +41,7 @@ class _TrixNoUploadJS:
 
 class TrixWidget(forms.Widget):
     class Media:
-        css = {'all': (_TrixCSS(),)}
+        css = {'all': (_TrixCSS(), _TrixAdminCSS())}
         js = (_TrixJS(), _TrixNoUploadJS())
 
     def render(self, name, value, attrs=None, renderer=None):
@@ -36,9 +49,7 @@ class TrixWidget(forms.Widget):
         field_id = attrs.get('id', f'id_{name}')
         return format_html(
             '<input type="hidden" id="{}" name="{}" value="{}">'
-            '<trix-editor input="{}" '
-            'class="trix-content border border-gray-300 rounded-lg min-h-[200px] p-2">'
-            '</trix-editor>',
+            '<trix-editor input="{}"></trix-editor>',
             field_id,
             name,
             value or '',
