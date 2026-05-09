@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
+from django.utils.safestring import SafeData
 from core.widgets import TrixWidget
 from events.admin import EventAdmin
 from events.models import Event
@@ -8,20 +9,24 @@ from core.models import AboutSection, Service
 
 
 class TrixWidgetTest(TestCase):
+    def setUp(self):
+        self.widget = TrixWidget()
+        self.html = self.widget.render('body', 'existing text', attrs={'id': 'id_body'})
+
     def test_renders_trix_editor_element(self):
-        widget = TrixWidget()
-        html = widget.render('description', '', attrs={'id': 'id_description'})
-        self.assertIn('<trix-editor', html)
+        self.assertIn('<trix-editor', self.html)
 
-    def test_trix_editor_input_attribute_matches_textarea_id(self):
-        widget = TrixWidget()
-        html = widget.render('description', '', attrs={'id': 'id_description'})
-        self.assertIn('input="id_description"', html)
+    def test_trix_editor_input_attribute_matches_id(self):
+        self.assertIn('input="id_body"', self.html)
 
-    def test_textarea_is_hidden(self):
-        widget = TrixWidget()
-        html = widget.render('description', '', attrs={'id': 'id_description'})
-        self.assertIn('hidden', html)
+    def test_hidden_input_carries_existing_value(self):
+        self.assertIn('value="existing text"', self.html)
+
+    def test_hidden_input_has_correct_name(self):
+        self.assertIn('name="body"', self.html)
+
+    def test_returns_safe_string(self):
+        self.assertIsInstance(self.html, SafeData)
 
 
 class EventAdminTrixTest(TestCase):
