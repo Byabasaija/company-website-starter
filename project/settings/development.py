@@ -23,3 +23,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 GOOGLE_ANALYTICS = env('GOOGLE_ANALYTICS', default='')
 
 INTERNAL_IPS = ['127.0.0.1']
+
+RECAPTCHA_SKIP_CHECK = True
+RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY', default='')
+RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY', default='')

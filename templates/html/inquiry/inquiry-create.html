@@ -70,4 +70,27 @@
 
 {% block scripts %}
 <script src="{% static './js/inquiry/inquiry.js' %}"></script>
+{% if RECAPTCHA_SITE_KEY %}
+<script src="https://www.google.com/recaptcha/api.js?render={{ RECAPTCHA_SITE_KEY }}"></script>
+<script>
+(function () {
+    const form = document.querySelector('form[action="{% url 'contact-us' %}"]');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const f = this;
+        grecaptcha.ready(function () {
+            grecaptcha.execute('{{ RECAPTCHA_SITE_KEY }}', { action: 'inquiry' }).then(function (token) {
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'g-recaptcha-response';
+                input.value = token;
+                f.appendChild(input);
+                f.submit();
+            });
+        });
+    });
+})();
+</script>
+{% endif %}
 {% endblock %}

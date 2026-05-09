@@ -1,4 +1,6 @@
-from django.http import JsonResponse
+import requests as http_requests
+from django.conf import settings
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 
@@ -6,6 +8,22 @@ from django_ratelimit.decorators import ratelimit
 
 from .models import Inquiry
 from .forms import InquiryForm
+
+
+def _verify_recaptcha(token):
+    if getattr(settings, 'RECAPTCHA_SKIP_CHECK', False):
+        return True
+    if not token:
+        return False
+    try:
+        resp = http_requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={'secret': settings.RECAPTCHA_SECRET_KEY, 'response': token},
+            timeout=5,
+        ).json()
+        return resp.get('success') and resp.get('score', 0) >= 0.5
+    except Exception:
+        return False
 
 
 @require_http_methods(['GET', 'POST'])
@@ -16,6 +34,13 @@ def inquiry_view(request):
         return render(request, 'inquiry/inquiry-create.html')
     
     elif request.method == 'POST':
+
+        token = request.POST.get('g-recaptcha-response', '')
+        if not _verify_recaptcha(token):
+            return render(request, 'inquiry/inquiry-create.html', {
+                'errors': {'recaptcha': ['Please complete the reCAPTCHA verification.']},
+                'data': request.POST,
+            })
 
         form = InquiryForm(request.POST)
 

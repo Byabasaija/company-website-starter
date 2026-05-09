@@ -13,4 +13,5 @@ def site_config(request):
         'nav_links': NavLink.objects.filter(is_active=True),
         'footer_links': FooterLink.objects.filter(is_active=True),
         'GOOGLE_ANALYTICS': getattr(settings, 'GOOGLE_ANALYTICS', ''),
+        'RECAPTCHA_SITE_KEY': getattr(settings, 'RECAPTCHA_SITE_KEY', ''),
     }
