@@ -27,6 +27,7 @@ class SiteConfigAdmin(admin.ModelAdmin):
         ('Contact', {'fields': ('email', 'phone', 'address')}),
         ('Social Links', {'fields': ('facebook', 'twitter', 'instagram', 'linkedin', 'youtube')}),
         ('Footer', {'fields': ('footer_text',)}),
+        ('Features', {'fields': ('newsletter_enabled',)}),
     )
 
     def has_add_permission(self, request):

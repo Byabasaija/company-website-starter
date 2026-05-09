@@ -208,9 +208,10 @@
                 </ul>
             </div>
 
-            <!-- Col 3: Newsletter subscribe -->
+            <!-- Col 3: Newsletter subscribe (toggled via SiteConfig.newsletter_enabled) -->
             <div>
                 {% block footer_extra %}
+                {% if site.newsletter_enabled %}
                 <h3 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Newsletter</h3>
                 <p class="text-sm mb-4">Stay updated with the latest news and events.</p>
                 <form method="post" action="{% url 'newsletter-subscribe' %}" class="flex flex-col gap-3">
@@ -222,6 +223,7 @@
                         Subscribe
                     </button>
                 </form>
+                {% endif %}
                 {% endblock %}
             </div>
         </div>

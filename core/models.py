@@ -17,6 +17,7 @@ class SiteConfig(models.Model):
     instagram       = models.URLField(blank=True)
     linkedin        = models.URLField(blank=True)
     youtube         = models.URLField(blank=True)
+    newsletter_enabled = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Site Configuration'
