@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import (SiteConfig, HomepageSection, HeroSection, AboutSection,
+from .models import (SiteConfig, HomepageSection, HeroSection, HeroSlide, HeroImage, AboutSection,
                      TeamMember, Service, Testimonial, Partner, NavLink, FooterLink)
 from .widgets import TrixWidget
 
@@ -47,6 +47,25 @@ class HomepageSectionAdmin(admin.ModelAdmin):
 @admin.register(HeroSection)
 class HeroSectionAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(HeroSlide)
+class HeroSlideAdmin(admin.ModelAdmin):
+    list_display  = ('headline', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    fieldsets = (
+        ('Content', {'fields': ('headline', 'subheadline')}),
+        ('Primary CTA', {'fields': ('cta_text', 'cta_url')}),
+        ('Secondary CTA', {'fields': ('cta2_text', 'cta2_url'), 'classes': ('collapse',)}),
+        ('Layout', {'fields': ('right_panel',)}),
+        ('Settings', {'fields': ('order', 'is_active')}),
+    )
+
+
+@admin.register(HeroImage)
+class HeroImageAdmin(admin.ModelAdmin):
+    list_display  = ('__str__', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
 
 
 @admin.register(AboutSection)

@@ -68,6 +68,50 @@ class HeroSection(models.Model):
         return self.headline
 
 
+class HeroSlide(models.Model):
+    RIGHT_PANEL_CHOICES = [
+        ('none',     'None'),
+        ('services', 'Services'),
+        ('events',   'Upcoming Events'),
+        ('news',     'Latest News'),
+    ]
+
+    headline         = models.CharField(max_length=200, default='Welcome',
+                                        help_text='Wrap words in &lt;em&gt; to highlight them in accent colour')
+    subheadline      = models.CharField(max_length=300, blank=True)
+    cta_text         = models.CharField(max_length=50, default='Learn More')
+    cta_url          = models.CharField(max_length=200, default='/')
+    cta2_text        = models.CharField(max_length=50, blank=True, verbose_name='Secondary CTA label')
+    cta2_url         = models.CharField(max_length=200, blank=True, verbose_name='Secondary CTA URL')
+    right_panel      = models.CharField(max_length=20, choices=RIGHT_PANEL_CHOICES, default='events',
+                                        verbose_name='Right panel content')
+    background_image = models.ImageField(upload_to='hero/', blank=True, null=True)
+    order            = models.PositiveIntegerField(default=0)
+    is_active        = models.BooleanField(default=True)
+
+    class Meta:
+        ordering    = ['order']
+        verbose_name = 'Hero Slide'
+        verbose_name_plural = 'Hero Slides'
+
+    def __str__(self):
+        return self.headline
+
+
+class HeroImage(models.Model):
+    image     = models.ImageField(upload_to='hero/')
+    order     = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering    = ['order']
+        verbose_name = 'Hero Background Image'
+        verbose_name_plural = 'Hero Background Images'
+
+    def __str__(self):
+        return f'Hero image #{self.order}'
+
+
 class AboutSection(models.Model):
     heading = models.CharField(max_length=200, default='About Us')
     body    = models.TextField(blank=True)

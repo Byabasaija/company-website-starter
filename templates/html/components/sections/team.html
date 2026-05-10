@@ -1,28 +1,33 @@
 {% if team_members %}
-<section class="section-padding bg-white">
-    <div class="max-w-7xl mx-auto text-center">
-        <h2 class="section-title">Our Team</h2>
-        <p class="section-subtitle">Meet the people behind the work</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-4">
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="section-label">The Team</span>
+            <h2 class="section-title mx-auto">Meet the People Behind the Work</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for member in team_members %}
-            <div class="flex flex-col items-center text-center">
+            <div class="card card-lift p-6 flex flex-col items-center text-center group">
                 {% if member.photo %}
-                    <img src="{{ member.photo.url }}" alt="{{ member.name }}"
-                         class="w-28 h-28 rounded-full object-cover mb-4 shadow-md">
+                    <div class="relative mb-4">
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}"
+                             class="w-24 h-24 rounded-2xl object-cover shadow-md group-hover:scale-105 transition-transform duration-300">
+                        <div class="absolute inset-0 rounded-2xl ring-2 ring-primary/0 group-hover:ring-primary/20 transition-all duration-300"></div>
+                    </div>
                 {% else %}
-                    <div class="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                        <i class="bi bi-person text-5xl text-gray-400"></i>
+                    <div class="w-24 h-24 rounded-2xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/12 transition-colors">
+                        <i class="bi bi-person text-4xl text-primary/50"></i>
                     </div>
                 {% endif %}
-                <h3 class="font-semibold text-gray-900 text-lg">{{ member.name }}</h3>
-                <p class="text-primary text-sm mb-2">{{ member.role }}</p>
+                <h3 class="font-bold text-gray-900 text-base group-hover:text-primary transition-colors">{{ member.name }}</h3>
+                <p class="text-primary text-xs font-semibold mt-0.5 mb-2">{{ member.role }}</p>
                 {% if member.bio %}
-                    <p class="text-gray-500 text-sm leading-relaxed">{{ member.bio }}</p>
+                    <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">{{ member.bio }}</p>
                 {% endif %}
-                <div class="flex gap-3 mt-3 text-gray-400 text-lg">
-                    {% if member.facebook %}<a href="{{ member.facebook }}" target="_blank" class="hover:text-primary"><i class="bi bi-facebook"></i></a>{% endif %}
-                    {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank" class="hover:text-primary"><i class="bi bi-twitter-x"></i></a>{% endif %}
-                    {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" class="hover:text-primary"><i class="bi bi-linkedin"></i></a>{% endif %}
+                <div class="flex gap-3 mt-4 text-gray-300 text-base">
+                    {% if member.facebook %}<a href="{{ member.facebook }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors"><i class="bi bi-facebook"></i></a>{% endif %}
+                    {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors"><i class="bi bi-twitter-x"></i></a>{% endif %}
+                    {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors"><i class="bi bi-linkedin"></i></a>{% endif %}
                 </div>
             </div>
             {% endfor %}

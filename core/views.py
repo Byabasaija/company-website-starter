@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from .models import (HomepageSection, HeroSection, AboutSection,
+from .models import (HomepageSection, HeroSection, HeroSlide, HeroImage, AboutSection,
                      TeamMember, Service, Testimonial, Partner)
 from blog.models import Blog
 from events.models import Event
@@ -12,7 +12,8 @@ def home_view(request):
     now = timezone.now()
     context = {
         'homepage_sections': HomepageSection.objects.filter(is_active=True),
-        'hero':         HeroSection.objects.first(),
+        'hero':         HeroSlide.objects.filter(is_active=True).first(),
+        'hero_images':  HeroImage.objects.filter(is_active=True),
         'about':        AboutSection.objects.first(),
         'team_members': TeamMember.objects.filter(is_active=True),
         'services':     Service.objects.filter(is_active=True),
