@@ -1,0 +1,20 @@
+{% if about %}
+<section class="section-padding bg-white">
+    <div class="max-w-3xl mx-auto text-center">
+        <span class="section-label">About Us</span>
+        <h2 class="section-title mt-2">{{ about.heading }}</h2>
+        {% if about.image %}
+        <div class="rounded-3xl overflow-hidden shadow-xl my-10">
+            <img src="{{ about.image.url }}" alt="{{ about.heading }}"
+                 class="w-full h-72 object-cover">
+        </div>
+        {% endif %}
+        <div class="text-gray-600 leading-relaxed text-lg text-left">
+            {{ about.body|safe }}
+        </div>
+        <a href="/about/" class="inline-flex items-center gap-2 mt-10 text-primary font-semibold hover:gap-3 transition-all">
+            Read more <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+</section>
+{% endif %}

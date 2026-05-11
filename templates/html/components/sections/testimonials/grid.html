@@ -1,0 +1,38 @@
+{% if testimonials %}
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="section-label">Testimonials</span>
+            <h2 class="section-title mt-2">What People Say</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for testimonial in testimonials %}
+            <div class="card p-8 flex flex-col gap-5">
+                <div class="flex gap-1 text-secondary text-sm">
+                    {% for i in "12345" %}<i class="bi bi-star-fill"></i>{% endfor %}
+                </div>
+                <blockquote class="text-gray-700 leading-relaxed flex-1">
+                    "{{ testimonial.quote }}"
+                </blockquote>
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    {% if testimonial.photo %}
+                        <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}"
+                             class="w-10 h-10 rounded-full object-cover">
+                    {% else %}
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                            <i class="bi bi-person text-lg text-primary/40"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <p class="font-semibold text-gray-900 text-sm">{{ testimonial.name }}</p>
+                        {% if testimonial.role or testimonial.organization %}
+                            <p class="text-gray-400 text-xs">{{ testimonial.role }}{% if testimonial.organization %}, {{ testimonial.organization }}{% endif %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

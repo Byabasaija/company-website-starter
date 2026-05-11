@@ -1,5 +1,5 @@
 from django.conf import settings
-from .models import SiteConfig, NavLink, FooterLink
+from .models import SiteConfig, NavLink
 
 
 def site_config(request):
@@ -10,8 +10,12 @@ def site_config(request):
 
     return {
         'site': site,
-        'nav_links': NavLink.objects.filter(is_active=True),
-        'footer_links': FooterLink.objects.filter(is_active=True),
+        'nav_links': NavLink.objects.filter(
+            is_active=True, parent=None, placement__in=['primary', 'both']
+        ).prefetch_related('children'),
+        'footer_links': NavLink.objects.filter(
+            is_active=True, placement__in=['footer', 'both']
+        ),
         'GOOGLE_ANALYTICS': getattr(settings, 'GOOGLE_ANALYTICS', ''),
         'RECAPTCHA_SITE_KEY': getattr(settings, 'RECAPTCHA_SITE_KEY', ''),
     }

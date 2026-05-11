@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'faq',
     'newsletter',
     'profiles',
+    'pages',
 ]
 
 SITE_ID = 1

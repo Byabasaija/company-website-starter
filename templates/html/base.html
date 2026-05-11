@@ -45,12 +45,23 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 
     {% if GOOGLE_ANALYTICS %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS }}"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ GOOGLE_ANALYTICS }}');
+        /* Only initialise GA if the visitor has already accepted cookies */
+        window.__ga_id = '{{ GOOGLE_ANALYTICS }}';
+        function loadGA() {
+            if (document.getElementById('ga-script')) return;
+            var s = document.createElement('script');
+            s.id  = 'ga-script';
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + window.__ga_id;
+            s.async = true;
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', window.__ga_id);
+        }
+        if (localStorage.getItem('cookie_consent') === 'accepted') { loadGA(); }
     </script>
     {% endif %}
 
@@ -94,23 +105,66 @@
             <!-- Desktop nav -->
             <nav class="hidden lg:flex items-center gap-1 text-sm font-medium">
                 {% for link in nav_links %}
-                    {% if request.path == link.url %}
-                        <a href="{{ link.url }}"
-                           :class="atTop
-                               ? 'text-white font-semibold bg-white/15'
-                               : 'text-primary bg-primary/8 font-semibold'"
-                           class="px-4 py-2 rounded-lg transition-all duration-200">
+                    {% with children=link.children.all %}
+                    {% if children %}
+                    <!-- Dropdown item -->
+                    <div class="relative" x-data="{ dd: false }"
+                         @mouseenter="dd = true" @mouseleave="dd = false"
+                         @focusin="dd = true"   @focusout="dd = false">
+
+                        <button :class="atTop
+                                    ? 'text-white/80 hover:text-white hover:bg-white/10'
+                                    : 'text-gray-600 hover:text-primary hover:bg-gray-50'"
+                                class="flex items-center gap-1.5 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
                             {{ link.label }}
-                        </a>
+                            <i class="bi bi-chevron-down text-[10px] transition-transform duration-200"
+                               :class="dd ? 'rotate-180' : ''"></i>
+                        </button>
+
+                        <!-- Dropdown panel -->
+                        <div x-show="dd"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                             class="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50"
+                             style="display:none">
+                            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 min-w-[220px]">
+                                {% for child in children %}
+                                {% if child.is_active %}
+                                <a href="{{ child.get_url }}"
+                                   class="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 group transition-colors">
+                                    {% if child.icon %}
+                                    <span class="w-8 h-8 rounded-lg bg-primary/8 group-hover:bg-primary/15 flex items-center justify-center shrink-0 mt-0.5 transition-colors">
+                                        <i class="bi {{ child.icon }} text-primary text-sm"></i>
+                                    </span>
+                                    {% endif %}
+                                    <span>
+                                        <span class="block text-gray-900 font-semibold text-sm group-hover:text-primary transition-colors">{{ child.label }}</span>
+                                        {% if child.description %}
+                                        <span class="block text-gray-400 text-xs mt-0.5 leading-snug">{{ child.description }}</span>
+                                        {% endif %}
+                                    </span>
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
                     {% else %}
-                        <a href="{{ link.url }}"
-                           :class="atTop
-                               ? 'text-white/80 hover:text-white hover:bg-white/10'
-                               : 'text-gray-600 hover:text-primary hover:bg-gray-50'"
-                           class="px-4 py-2 rounded-lg transition-all duration-200">
-                            {{ link.label }}
-                        </a>
+                    <!-- Plain link -->
+                    <a href="{{ link.get_url }}"
+                       :class="atTop
+                           ? '{% if request.path == link.get_url %}text-white font-semibold bg-white/15{% else %}text-white/80 hover:text-white hover:bg-white/10{% endif %}'
+                           : '{% if request.path == link.get_url %}text-primary bg-primary/8 font-semibold{% else %}text-gray-600 hover:text-primary hover:bg-gray-50{% endif %}'"
+                       class="px-4 py-2 rounded-lg transition-all duration-200">
+                        {{ link.label }}
+                    </a>
                     {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </nav>
 
@@ -180,23 +234,56 @@
             </button>
         </div>
 
-        <!-- Mobile menu (always solid white) -->
+        <!-- Mobile menu -->
         <div x-show="open"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 -translate-y-2"
              x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-end="opacity-0 -translate-y-2"
-             class="lg:hidden absolute top-16 left-0 w-full bg-white border-b border-gray-100 shadow-md">
-            <div class="px-6 py-4 flex flex-col gap-1">
+             class="lg:hidden absolute top-16 left-0 w-full bg-white border-b border-gray-100 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div class="px-4 py-3 flex flex-col gap-0.5">
                 {% for link in nav_links %}
-                    <a href="{{ link.url }}"
-                       class="py-3 px-3 rounded-lg font-medium transition-colors {% if request.path == link.url %}text-primary bg-primary/8{% else %}text-gray-700 hover:text-primary hover:bg-gray-50{% endif %}">
+                    {% with children=link.children.all %}
+                    {% if children %}
+                    <!-- Mobile accordion -->
+                    <div x-data="{ acc: false }">
+                        <button @click="acc = !acc"
+                                class="w-full flex items-center justify-between py-3 px-3 rounded-lg font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                            {{ link.label }}
+                            <i class="bi bi-chevron-down text-xs text-gray-400 transition-transform duration-200"
+                               :class="acc ? 'rotate-180' : ''"></i>
+                        </button>
+                        <div x-show="acc"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="ml-3 mb-1 border-l-2 border-gray-100 pl-3 flex flex-col gap-0.5"
+                             style="display:none">
+                            {% for child in children %}
+                            {% if child.is_active %}
+                            <a href="{{ child.get_url }}"
+                               class="flex items-center gap-2.5 py-2.5 px-2 rounded-lg text-sm font-medium text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors">
+                                {% if child.icon %}
+                                <i class="bi {{ child.icon }} text-primary text-sm w-4 text-center shrink-0"></i>
+                                {% endif %}
+                                {{ child.label }}
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Plain mobile link -->
+                    <a href="{{ link.get_url }}"
+                       class="py-3 px-3 rounded-lg font-medium transition-colors {% if request.path == link.get_url %}text-primary bg-primary/8{% else %}text-gray-700 hover:text-primary hover:bg-gray-50{% endif %}">
                         {{ link.label }}
                     </a>
+                    {% endif %}
+                    {% endwith %}
                 {% endfor %}
                 <a href="/contact/"
-                   class="mt-2 py-3 px-3 rounded-lg font-semibold text-white bg-primary text-center">
+                   class="mt-2 py-3 px-3 rounded-xl font-semibold text-white bg-primary text-center">
                     Contact Us
                 </a>
             </div>
@@ -255,7 +342,7 @@
                 <ul class="space-y-3">
                     {% for link in nav_links %}
                     <li>
-                        <a href="{{ link.url }}"
+                        <a href="{{ link.get_url }}"
                            class="text-lg font-semibold text-white/65 hover:text-white transition-colors duration-200">
                             {{ link.label }}
                         </a>
@@ -271,7 +358,7 @@
                 <ul class="space-y-3 mb-10">
                     {% for link in footer_links %}
                     <li>
-                        <a href="{{ link.url }}"
+                        <a href="{{ link.get_url }}"
                            class="text-lg font-semibold text-white/65 hover:text-white transition-colors duration-200">
                             {{ link.label }}
                         </a>
@@ -362,6 +449,72 @@
     </div>
 
     {% block scripts %}{% endblock %}
+
+    <!-- Cookie Consent Banner -->
+    <div x-data="{
+             show: false,
+             init() {
+                 if (!localStorage.getItem('cookie_consent')) {
+                     setTimeout(() => this.show = true, 900);
+                 }
+             },
+             accept() {
+                 localStorage.setItem('cookie_consent', 'accepted');
+                 this.show = false;
+                 {% if GOOGLE_ANALYTICS %}if (window.loadGA) window.loadGA();{% endif %}
+             },
+             decline() {
+                 localStorage.setItem('cookie_consent', 'declined');
+                 this.show = false;
+             }
+         }"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-500"
+         x-transition:enter-start="opacity-0 translate-y-6"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-6"
+         class="fixed bottom-6 left-6 z-[9998] w-[calc(100vw-3rem)] max-w-sm"
+         style="display:none">
+
+        <div class="bg-gray-950 border border-gray-800 rounded-2xl shadow-2xl shadow-black/40 p-5">
+
+            <!-- Header -->
+            <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                        <i class="bi bi-shield-check text-primary text-sm"></i>
+                    </div>
+                    <p class="text-white font-semibold text-sm">Cookie Preferences</p>
+                </div>
+                <button @click="decline()"
+                        class="text-gray-600 hover:text-gray-400 transition-colors mt-0.5 shrink-0"
+                        aria-label="Dismiss">
+                    <i class="bi bi-x text-lg leading-none"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                We use cookies to improve your experience and analyse site traffic.
+                {% if GOOGLE_ANALYTICS %}Analytics are only enabled with your consent.{% endif %}
+                <a href="/privacy/" class="text-primary hover:text-primary/80 hover:underline transition-colors">Privacy policy</a>
+            </p>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+                <button @click="accept()"
+                        class="flex-1 bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors">
+                    Accept All
+                </button>
+                <button @click="decline()"
+                        class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors">
+                    Decline
+                </button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

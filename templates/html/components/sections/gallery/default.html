@@ -1,0 +1,32 @@
+{% load static %}
+{% if gallery_images %}
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <span class="section-label">Gallery</span>
+                <h2 class="section-title mb-0">In Pictures</h2>
+            </div>
+            <a href="/gallery/" class="view-all-link">
+                View all <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 auto-rows-[180px]">
+            {% for image in gallery_images %}
+            <a href="/gallery/"
+               class="{% if forloop.first %}md:col-span-2 md:row-span-2{% endif %} overflow-hidden rounded-2xl shadow-sm group relative">
+                <img src="{{ image.image.url }}"
+                     alt="{{ image.caption|default:'' }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     loading="lazy">
+                {% if image.caption %}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    <p class="text-white text-sm font-medium">{{ image.caption }}</p>
+                </div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

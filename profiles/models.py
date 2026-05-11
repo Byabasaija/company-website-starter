@@ -14,6 +14,10 @@ class ProfileCategory(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('profile-category', kwargs={'category_slug': self.slug})
+
 
 class Profile(models.Model):
     category  = models.ForeignKey(ProfileCategory, on_delete=models.CASCADE, related_name='profiles')
@@ -46,3 +50,10 @@ class Profile(models.Model):
                 n += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('profile-detail', kwargs={
+            'category_slug': self.category.slug,
+            'profile_slug': self.slug,
+        })

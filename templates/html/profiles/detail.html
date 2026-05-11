@@ -11,9 +11,9 @@
     <div class="max-w-4xl mx-auto">
 
         <!-- Back link -->
-        <a href="{% url 'profile-list' %}"
+        <a href="{{ category.get_absolute_url }}"
            class="inline-flex items-center gap-1 text-sm text-primary font-medium hover:underline mb-8">
-            <i class="bi bi-arrow-left"></i> All People
+            <i class="bi bi-arrow-left"></i> {{ category.name }}
         </a>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">

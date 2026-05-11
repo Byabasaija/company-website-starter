@@ -1,0 +1,214 @@
+{% load static %}
+{% if hero %}
+<section class="relative min-h-screen flex flex-col bg-gray-950 text-white overflow-hidden -mt-16"
+         x-data="{
+             current: 0,
+             total: {{ hero_images|length }},
+             timer: null,
+             start() {
+                 if (this.total > 1)
+                     this.timer = setInterval(() => { this.current = (this.current + 1) % this.total; }, 6000);
+             },
+             stop() { clearInterval(this.timer); }
+         }"
+         x-init="start()">
+
+    <!-- ── Background images ─────────────────────────────────── -->
+    {% if hero_images %}
+        {% for img in hero_images %}
+        <div x-show="current === {{ forloop.counter0 }}"
+             x-transition:enter="transition-opacity ease-in-out duration-1200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-in-out duration-700"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0">
+            <img src="{{ img.image.url }}" alt=""
+                 class="w-full h-full object-cover">
+        </div>
+        {% endfor %}
+    {% elif hero.background_image %}
+        <img src="{{ hero.background_image.url }}" alt=""
+             class="absolute inset-0 w-full h-full object-cover">
+    {% else %}
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-primary/40 to-gray-950"></div>
+    {% endif %}
+
+    <!-- Dark overlays (persistent) -->
+    <div class="absolute inset-0 bg-gradient-to-r from-gray-950/88 via-gray-950/50 to-transparent pointer-events-none z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-gray-950/65 via-transparent to-gray-950/15 pointer-events-none z-10"></div>
+
+    <!-- ── Main content (static — same across all images) ──────── -->
+    <div class="relative z-20 flex-1 flex items-center">
+        <div class="w-full max-w-7xl mx-auto px-6 lg:px-16 py-28 flex items-center gap-12">
+
+            <!-- Left: Text -->
+            <div class="flex-1 min-w-0 hero-text-enter">
+
+                <!-- Eyebrow -->
+                <div class="inline-flex items-center gap-2 mb-6 px-3.5 py-1.5 rounded-full bg-white/8 border border-white/12 backdrop-blur-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse shrink-0"></span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-white/70">{{ site.site_name }}</span>
+                </div>
+
+                <!-- Headline — wrap words in <em> in admin to colour them amber -->
+                <h1 class="text-5xl lg:text-[5.5rem] font-extrabold leading-[1.02] mb-6 tracking-tight hero-headline max-w-2xl [text-shadow:0_4px_30px_rgba(0,0,0,0.35)]">
+                    {{ hero.headline|safe }}
+                </h1>
+
+                {% if hero.subheadline %}
+                <p class="text-lg lg:text-xl text-white/65 mb-10 leading-relaxed max-w-xl">
+                    {{ hero.subheadline }}
+                </p>
+                {% endif %}
+
+                <!-- CTAs -->
+                <div class="flex flex-wrap gap-4">
+                    <a href="{{ hero.cta_url }}"
+                       class="group inline-flex items-center gap-3 bg-white text-gray-900 px-7 py-3.5 rounded-full font-bold text-sm shadow-xl hover:bg-secondary hover:text-white transition-all duration-300">
+                        <span class="w-7 h-7 rounded-full bg-primary group-hover:bg-white/20 flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <i class="bi bi-arrow-right text-white text-xs"></i>
+                        </span>
+                        {{ hero.cta_text }}
+                    </a>
+                    {% if hero.cta2_text %}
+                    <a href="{{ hero.cta2_url }}"
+                       class="inline-flex items-center gap-2 text-white px-7 py-3.5 rounded-full font-bold text-sm border-2 border-white/25 hover:border-white/70 hover:bg-white/8 transition-all duration-300 backdrop-blur-sm">
+                        <span class="w-2 h-2 rounded-full bg-secondary shrink-0"></span>
+                        {{ hero.cta2_text }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right: Configurable panel -->
+            {% if hero.right_panel != 'none' %}
+            <div class="hidden lg:flex flex-col gap-3 shrink-0 w-72">
+
+                {% if hero.right_panel == 'services' and services %}
+                    {% for item in services|slice:":4" %}
+                    <div class="hero-feature-card flex items-center gap-3 bg-white/8 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3.5 hover:bg-white/14 hover:border-white/20 transition-all duration-300 cursor-default group">
+                        <div class="w-11 h-11 rounded-xl bg-primary/40 group-hover:bg-primary/60 flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <i class="bi {{ item.icon }} text-white text-lg"></i>
+                        </div>
+                        <p class="text-white text-sm font-semibold leading-snug">{{ item.title }}</p>
+                    </div>
+                    {% endfor %}
+
+                {% elif hero.right_panel == 'events' and upcoming_events %}
+                    {% for item in upcoming_events|slice:":4" %}
+                    <a href="{% url 'event-detail' slug=item.slug %}"
+                       class="hero-feature-card flex items-center gap-3 bg-white/8 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3.5 hover:bg-white/14 hover:border-white/20 transition-all duration-300 group">
+                        {% if item.thumbnail %}
+                        <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}"
+                             class="w-11 h-11 rounded-xl object-cover shrink-0">
+                        {% else %}
+                        <div class="w-11 h-11 rounded-xl bg-primary/40 group-hover:bg-primary/60 flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <i class="bi bi-calendar-event text-white text-lg"></i>
+                        </div>
+                        {% endif %}
+                        <div class="min-w-0">
+                            <p class="text-white text-sm font-semibold leading-snug truncate">{{ item.title }}</p>
+                            <p class="text-white/50 text-xs mt-0.5">{{ item.start_date|date:"N j, Y" }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                {% elif hero.right_panel == 'news' and latest_blogs %}
+                    {% for item in latest_blogs|slice:":4" %}
+                    <a href="{% url 'get-blog' slug=item.slug %}"
+                       class="hero-feature-card flex items-center gap-3 bg-white/8 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-3.5 hover:bg-white/14 hover:border-white/20 transition-all duration-300 group">
+                        {% if item.thumbnail %}
+                        <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}"
+                             class="w-11 h-11 rounded-xl object-cover shrink-0">
+                        {% else %}
+                        <div class="w-11 h-11 rounded-xl bg-primary/40 group-hover:bg-primary/60 flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <i class="bi bi-newspaper text-white text-lg"></i>
+                        </div>
+                        {% endif %}
+                        <div class="min-w-0">
+                            <p class="text-white text-sm font-semibold leading-snug truncate">{{ item.title }}</p>
+                            <p class="text-white/50 text-xs mt-0.5">{{ item.datetime|date:"N j, Y" }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ── Bottom bar ─────────────────────────────────────────── -->
+    <div class="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-16 pb-8 flex items-center">
+
+        <span class="hidden lg:block text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+            Scroll to Discover
+        </span>
+
+        {% if hero_images|length > 1 %}
+        <!-- Dots — centred -->
+        <div class="flex items-center gap-2 mx-auto lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+            {% for img in hero_images %}
+            <button @click="current = {{ forloop.counter0 }}"
+                    class="rounded-full transition-all duration-300 focus:outline-none"
+                    :class="current === {{ forloop.counter0 }} ? 'w-7 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/55'"
+                    aria-label="Background {{ forloop.counter }}">
+            </button>
+            {% endfor %}
+        </div>
+        <!-- Prev / Next -->
+        <div class="hidden lg:flex items-center gap-2 ml-auto">
+            <button @click="current = (current - 1 + total) % total"
+                    class="w-9 h-9 rounded-full border border-white/20 text-white/50 hover:text-white hover:border-white/60 flex items-center justify-center transition-all duration-200 hover:bg-white/8"
+                    aria-label="Previous">
+                <i class="bi bi-chevron-left text-sm"></i>
+            </button>
+            <button @click="current = (current + 1) % total"
+                    class="w-9 h-9 rounded-full border border-white/20 text-white/50 hover:text-white hover:border-white/60 flex items-center justify-center transition-all duration-200 hover:bg-white/8"
+                    aria-label="Next">
+                <i class="bi bi-chevron-right text-sm"></i>
+            </button>
+        </div>
+        {% endif %}
+
+    </div>
+
+</section>
+
+<style>
+/* Highlight <em> in headline using configured secondary colour */
+.hero-headline em {
+    font-style: normal;
+    color: var(--color-secondary);
+}
+
+/* Text entrance on page load */
+.hero-text-enter {
+    animation: heroTextIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+    opacity: 0;
+}
+@keyframes heroTextIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Staggered feature card entrance */
+.hero-feature-card {
+    animation: heroCardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+}
+.hero-feature-card:nth-child(1) { animation-delay: 0.5s; }
+.hero-feature-card:nth-child(2) { animation-delay: 0.65s; }
+.hero-feature-card:nth-child(3) { animation-delay: 0.80s; }
+.hero-feature-card:nth-child(4) { animation-delay: 0.95s; }
+
+@keyframes heroCardIn {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+</style>
+{% endif %}

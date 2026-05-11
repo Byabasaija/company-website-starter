@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }}{% endblock %}
+{% block description %}{{ category.name }} — {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<div class="bg-surface pt-28 pb-16 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+        <a href="{% url 'profile-list' %}"
+           class="inline-flex items-center gap-1.5 text-sm text-primary font-medium hover:underline mb-6">
+            <i class="bi bi-arrow-left"></i> All Categories
+        </a>
+        <p class="section-label">Our People</p>
+        <h1 class="section-title mt-2">{{ category.name }}</h1>
+    </div>
+</div>
+
+<section class="section-padding bg-white">
+    <div class="max-w-7xl mx-auto">
+        {% if profiles %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for profile in profiles %}
+            <a href="{{ profile.get_absolute_url }}"
+               class="card card-lift p-6 flex flex-col items-center text-center group block">
+                {% if profile.photo %}
+                <img src="{{ profile.photo.url }}" alt="{{ profile.name }}"
+                     class="w-28 h-28 rounded-2xl object-cover mb-4 shadow-md group-hover:scale-105 transition-transform duration-300">
+                {% else %}
+                <div class="w-28 h-28 rounded-2xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/12 transition-colors">
+                    <i class="bi bi-person text-5xl text-primary/40"></i>
+                </div>
+                {% endif %}
+                <h2 class="font-bold text-gray-900 text-base group-hover:text-primary transition-colors">
+                    {{ profile.name }}
+                </h2>
+                <p class="text-primary text-xs font-semibold mt-1">{{ profile.role }}</p>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-gray-400 py-20">No members in this category yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

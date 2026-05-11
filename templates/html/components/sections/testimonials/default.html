@@ -1,0 +1,78 @@
+{% if testimonials %}
+<section class="section-padding bg-primary overflow-hidden"
+         x-data="{
+             current: 0,
+             total: {{ testimonials|length }},
+             timer: null,
+             start() { this.timer = setInterval(() => this.next(), 6000); },
+             stop()  { clearInterval(this.timer); },
+             next()  { this.current = (this.current + 1) % this.total; },
+             prev()  { this.current = (this.current - 1 + this.total) % this.total; }
+         }"
+         x-init="start()"
+         @mouseenter="stop()"
+         @mouseleave="start()">
+
+    <!-- Decorative large quote mark -->
+    <div class="absolute top-8 left-1/2 -translate-x-1/2 text-[160px] leading-none font-serif text-white/5 select-none pointer-events-none" aria-hidden="true">"</div>
+
+    <div class="max-w-4xl mx-auto text-center relative">
+        <span class="section-label text-secondary/80">Testimonials</span>
+        <h2 class="text-3xl lg:text-4xl font-bold text-white mb-12">What People Say</h2>
+
+        <div class="relative min-h-[260px]">
+            {% for testimonial in testimonials %}
+            <div x-show="current === {{ forloop.counter0 }}"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute inset-0 flex flex-col items-center gap-5 px-4">
+                {% if testimonial.photo %}
+                    <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}"
+                         class="w-20 h-20 rounded-full object-cover ring-4 ring-white/20 shadow-xl">
+                {% else %}
+                    <div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center ring-4 ring-white/10">
+                        <i class="bi bi-person text-4xl text-white/40"></i>
+                    </div>
+                {% endif %}
+                <blockquote class="text-xl lg:text-2xl font-medium text-white/90 leading-relaxed italic max-w-2xl">
+                    "{{ testimonial.quote }}"
+                </blockquote>
+                <cite class="not-italic flex flex-col items-center gap-0.5">
+                    <span class="font-bold text-white text-base">{{ testimonial.name }}</span>
+                    {% if testimonial.role or testimonial.organization %}
+                        <span class="text-white/55 text-sm">{{ testimonial.role }}{% if testimonial.organization %}, {{ testimonial.organization }}{% endif %}</span>
+                    {% endif %}
+                </cite>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Controls: prev · dots · next -->
+        <div class="flex items-center justify-center gap-4 mt-10">
+            <button @click="prev()"
+                    class="w-9 h-9 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/60 flex items-center justify-center transition-colors"
+                    aria-label="Previous testimonial">
+                <i class="bi bi-chevron-left text-sm"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                {% for testimonial in testimonials %}
+                <button @click="current = {{ forloop.counter0 }}"
+                        class="rounded-full transition-all duration-300"
+                        :class="current === {{ forloop.counter0 }} ? 'w-6 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/60'"
+                        aria-label="Testimonial {{ forloop.counter }}">
+                </button>
+                {% endfor %}
+            </div>
+            <button @click="next()"
+                    class="w-9 h-9 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/60 flex items-center justify-center transition-colors"
+                    aria-label="Next testimonial">
+                <i class="bi bi-chevron-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+</section>
+{% endif %}

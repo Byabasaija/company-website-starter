@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 from .models import (SiteConfig, HomepageSection, HeroSection, HeroSlide, HeroImage, AboutSection,
-                     TeamMember, Service, Testimonial, Partner, NavLink, FooterLink)
+                     TeamMember, Service, Testimonial, Partner, NavLink)
 from .widgets import TrixWidget
 
 
@@ -39,8 +39,8 @@ class SiteConfigAdmin(admin.ModelAdmin):
 
 @admin.register(HomepageSection)
 class HomepageSectionAdmin(admin.ModelAdmin):
-    list_display  = ('get_section_type_display', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
+    list_display  = ('get_section_type_display', 'variant', 'order', 'is_active')
+    list_editable = ('variant', 'order', 'is_active')
     ordering      = ('order',)
 
 
@@ -98,13 +98,31 @@ class PartnerAdmin(admin.ModelAdmin):
     list_editable = ('order', 'is_active')
 
 
+class NavChildInline(admin.TabularInline):
+    model   = NavLink
+    fk_name = 'parent'
+    extra   = 1
+    fields  = ('label', 'page', 'url', 'icon', 'description', 'order', 'is_active')
+
+
 @admin.register(NavLink)
 class NavLinkAdmin(admin.ModelAdmin):
-    list_display  = ('label', 'url', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
+    list_display  = ('label', 'placement', 'get_url', 'parent', 'order', 'is_active')
+    list_editable = ('placement', 'order', 'is_active')
+    list_filter   = ('placement', 'parent')
+    fieldsets = (
+        ('Link', {
+            'fields': ('label', 'placement', 'page', 'url'),
+        }),
+        ('Dropdown', {
+            'fields': ('parent', 'icon', 'description'),
+            'classes': ('collapse',),
+        }),
+        ('Settings', {
+            'fields': ('order', 'is_active'),
+        }),
+    )
+    inlines = [NavChildInline]
 
-
-@admin.register(FooterLink)
-class FooterLinkAdmin(admin.ModelAdmin):
-    list_display  = ('label', 'url', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(parent=None)

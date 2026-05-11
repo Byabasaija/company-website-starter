@@ -1,0 +1,43 @@
+{% load static %}
+{% if latest_blogs %}
+<section class="section-padding bg-surface">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <span class="section-label">From the Blog</span>
+                <h2 class="section-title mb-0">Latest News</h2>
+            </div>
+            <a href="/blog/" class="view-all-link">
+                All posts <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for blog in latest_blogs %}
+            <a href="{% url 'get-blog' slug=blog.slug %}" class="card card-lift group flex flex-col">
+                {% if blog.thumbnail %}
+                <div class="aspect-video overflow-hidden">
+                    <img src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                {% else %}
+                <div class="aspect-video bg-gradient-to-br from-primary/8 to-surface flex items-center justify-center">
+                    <i class="bi bi-newspaper text-4xl text-primary/25"></i>
+                </div>
+                {% endif %}
+                <div class="p-6 flex flex-col flex-1">
+                    <p class="text-xs text-gray-400 font-medium mb-2">
+                        {{ blog.datetime|date:"N j, Y" }}
+                    </p>
+                    <h3 class="font-bold text-gray-900 text-lg mb-2 group-hover:text-primary transition-colors leading-snug flex-1">
+                        {{ blog.title }}
+                    </h3>
+                    <div class="mt-3 flex items-center gap-1 text-primary text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Read more <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}

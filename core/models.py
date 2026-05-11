@@ -44,6 +44,10 @@ class HomepageSection(models.Model):
         ('faq',          'FAQ'),
     ]
     section_type = models.CharField(max_length=50, choices=SECTION_TYPES, unique=True)
+    variant      = models.CharField(max_length=50, default='default', blank=True,
+                                    help_text='Layout variant. Leave blank for default. '
+                                              'services: list, showcase | team: minimal | '
+                                              'testimonials: grid | about: centered')
     order        = models.PositiveIntegerField(default=0)
     is_active    = models.BooleanField(default=True)
 
@@ -187,16 +191,42 @@ class Partner(models.Model):
 
 
 class NavLink(models.Model):
-    label     = models.CharField(max_length=50)
-    url       = models.CharField(max_length=200)
-    order     = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+    PLACEMENT_CHOICES = [
+        ('primary', 'Top Navigation'),
+        ('footer',  'Footer'),
+        ('both',    'Both'),
+    ]
+
+    label       = models.CharField(max_length=50)
+    placement   = models.CharField(max_length=10, choices=PLACEMENT_CHOICES, default='primary',
+                                   help_text='Where this link appears')
+    page        = models.ForeignKey('pages.Page', null=True, blank=True,
+                                    on_delete=models.SET_NULL, related_name='nav_links',
+                                    help_text='Pick a page to auto-fill the URL — or leave blank and enter a URL below')
+    url         = models.CharField(max_length=200, blank=True, default='',
+                                   help_text='Custom URL (used when no page is selected)')
+    description = models.CharField(max_length=100, blank=True,
+                                   help_text='Short subtitle shown in dropdown (child links only)')
+    icon        = models.CharField(max_length=50, blank=True,
+                                   help_text='Bootstrap icon e.g. bi-gear (child links only)')
+    parent      = models.ForeignKey('self', null=True, blank=True,
+                                    on_delete=models.CASCADE, related_name='children',
+                                    verbose_name='Parent link',
+                                    help_text='Set to make this a dropdown item under another link')
+    order       = models.PositiveIntegerField(default=0)
+    is_active   = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
-        return self.label
+        return f'{self.parent.label} → {self.label}' if self.parent else self.label
+
+    @property
+    def get_url(self):
+        if self.page_id:
+            return self.page.get_absolute_url()
+        return self.url or '#'
 
 
 class FooterLink(models.Model):

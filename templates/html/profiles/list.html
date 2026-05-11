@@ -5,63 +5,36 @@
 {% block description %}Meet the team behind {{ site.site_name }}{% endblock %}
 
 {% block content %}
-<section class="section-padding" x-data="{ filter: 'all' }">
-    <div class="max-w-7xl mx-auto">
+<div class="bg-surface pt-28 pb-16 text-center border-b border-gray-100">
+    <div class="max-w-3xl mx-auto px-6">
+        <p class="section-label">Our People</p>
+        <h1 class="section-title mt-2">Meet the Team</h1>
+        <p class="section-subtitle mt-4">The people behind {{ site.site_name }}</p>
+    </div>
+</div>
 
-        <div class="text-center mb-10">
-            <h1 class="section-title">Our People</h1>
-            <p class="section-subtitle">The team behind {{ site.site_name }}</p>
-        </div>
-
+<section class="section-padding bg-white">
+    <div class="max-w-5xl mx-auto">
         {% if categories %}
-        <div class="flex flex-wrap justify-center gap-2 mb-10">
-            <button @click="filter = 'all'"
-                    :class="filter === 'all' ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-300 hover:border-primary hover:text-primary'"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                All
-            </button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for category in categories %}
-            <button @click="filter = '{{ category.slug }}'"
-                    :class="filter === '{{ category.slug }}' ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-300 hover:border-primary hover:text-primary'"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                {{ category.name }}
-            </button>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        {% if profiles %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {% for profile in profiles %}
-            <div x-show="filter === 'all' || filter === '{{ profile.category.slug }}'"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 scale-95"
-                 x-transition:enter-end="opacity-100 scale-100">
-                <a href="{% url 'profile-detail' profile.slug %}"
-                   class="card p-6 flex flex-col items-center text-center hover:shadow-md transition-shadow group block">
-                    {% if profile.photo %}
-                    <img src="{{ profile.photo.url }}" alt="{{ profile.name }}"
-                         class="w-28 h-28 rounded-full object-cover mb-4 shadow-md group-hover:scale-105 transition-transform duration-300">
-                    {% else %}
-                    <div class="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                        <i class="bi bi-person text-5xl text-gray-400"></i>
-                    </div>
-                    {% endif %}
-                    <h2 class="font-semibold text-gray-900 text-lg group-hover:text-primary transition-colors">
-                        {{ profile.name }}
-                    </h2>
-                    <p class="text-primary text-sm mt-1">{{ profile.role }}</p>
-                    <span class="mt-2 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                        {{ profile.category.name }}
-                    </span>
-                </a>
-            </div>
+            <a href="{{ category.get_absolute_url }}"
+               class="card card-lift p-8 flex flex-col gap-4 group">
+                <div class="w-12 h-12 rounded-xl bg-primary/8 group-hover:bg-primary flex items-center justify-center transition-colors duration-300">
+                    <i class="bi bi-people text-xl text-primary group-hover:text-white transition-colors duration-300"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">
+                    {{ category.name }}
+                </h2>
+                <span class="text-primary text-sm font-semibold flex items-center gap-1 mt-auto group-hover:gap-2 transition-all">
+                    View members <i class="bi bi-arrow-right"></i>
+                </span>
+            </a>
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-center text-gray-500 py-16">No profiles yet.</p>
+        <p class="text-center text-gray-400 py-20">No categories yet.</p>
         {% endif %}
-
     </div>
 </section>
 {% endblock %}

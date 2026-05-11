@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static section_tags %}
 
 {% block transparent_nav %}true{% endblock %}
 {% block title %}Home{% endblock %}
@@ -20,38 +20,6 @@
 
 {% block content %}
 {% for section in homepage_sections %}
-
-    {% if section.section_type == 'hero' %}
-        {% include "components/sections/hero.html" %}
-
-    {% elif section.section_type == 'about' %}
-        {% include "components/sections/about.html" %}
-
-    {% elif section.section_type == 'services' %}
-        {% include "components/sections/services.html" %}
-
-    {% elif section.section_type == 'team' %}
-        {% include "components/sections/team.html" %}
-
-    {% elif section.section_type == 'events' %}
-        {% include "components/sections/upcoming-events.html" %}
-
-    {% elif section.section_type == 'gallery' %}
-        {% include "components/sections/gallery-preview.html" %}
-
-    {% elif section.section_type == 'testimonials' %}
-        {% include "components/sections/testimonials.html" %}
-
-    {% elif section.section_type == 'partners' %}
-        {% include "components/sections/partners.html" %}
-
-    {% elif section.section_type == 'news' %}
-        {% include "components/sections/latest-news.html" %}
-
-    {% elif section.section_type == 'faq' %}
-        {% include "components/sections/faq-preview.html" %}
-
-    {% endif %}
-
+    {% render_section section.section_type section.variant %}
 {% endfor %}
 {% endblock %}
