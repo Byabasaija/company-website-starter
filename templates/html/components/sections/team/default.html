@@ -1,13 +1,14 @@
 {% if team_members %}
 <section class="section-padding bg-surface">
     <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12 reveal">
             <span class="section-label">The Team</span>
             <h2 class="section-title mx-auto">Meet the People Behind the Work</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {% for member in team_members %}
-            <div class="card card-lift p-6 flex flex-col items-center text-center group">
+            <div class="card card-lift p-6 flex flex-col items-center text-center group reveal"
+                 data-delay="{{ forloop.counter0 }}">
                 {% if member.photo %}
                     <div class="relative mb-4">
                         <img src="{{ member.photo.url }}" alt="{{ member.name }}"

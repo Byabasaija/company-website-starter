@@ -70,21 +70,33 @@ class ProfileListViewTest(TestCase):
         response = self.client.get(reverse('profile-list'))
         self.assertEqual(response.status_code, 200)
 
-    def test_list_context_has_profiles(self):
-        response = self.client.get(reverse('profile-list'))
-        self.assertIn('profiles', response.context)
-
     def test_list_context_has_categories(self):
         response = self.client.get(reverse('profile-list'))
         self.assertIn('categories', response.context)
 
-    def test_list_only_shows_active_profiles(self):
-        response = self.client.get(reverse('profile-list'))
-        self.assertEqual(len(response.context['profiles']), 1)
-
-    def test_list_page_has_category_filter(self):
+    def test_list_page_has_category_link(self):
         response = self.client.get(reverse('profile-list'))
         self.assertContains(response, 'executives')
+
+
+class ProfileCategoryViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.cat = make_category('Executives')
+        make_profile('Alice', self.cat)
+        make_profile('Bob', self.cat, is_active=False)
+
+    def test_category_returns_200(self):
+        response = self.client.get(reverse('profile-category', args=[self.cat.slug]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_category_context_has_profiles(self):
+        response = self.client.get(reverse('profile-category', args=[self.cat.slug]))
+        self.assertIn('profiles', response.context)
+
+    def test_category_only_shows_active_profiles(self):
+        response = self.client.get(reverse('profile-category', args=[self.cat.slug]))
+        self.assertEqual(len(response.context['profiles']), 1)
 
 
 class ProfileDetailViewTest(TestCase):
@@ -94,15 +106,21 @@ class ProfileDetailViewTest(TestCase):
 
     def test_detail_returns_200(self):
         p = make_profile('John Smith', self.cat)
-        response = self.client.get(reverse('profile-detail', args=[p.slug]))
+        response = self.client.get(
+            reverse('profile-detail', args=[self.cat.slug, p.slug])
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_detail_404_for_inactive(self):
         p = make_profile('Hidden Person', self.cat, is_active=False)
-        response = self.client.get(reverse('profile-detail', args=[p.slug]))
+        response = self.client.get(
+            reverse('profile-detail', args=[self.cat.slug, p.slug])
+        )
         self.assertEqual(response.status_code, 404)
 
     def test_detail_context_has_profile(self):
         p = make_profile('John Smith', self.cat)
-        response = self.client.get(reverse('profile-detail', args=[p.slug]))
+        response = self.client.get(
+            reverse('profile-detail', args=[self.cat.slug, p.slug])
+        )
         self.assertEqual(response.context['profile'].name, 'John Smith')

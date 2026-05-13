@@ -2,7 +2,7 @@
 {% if upcoming_events %}
 <section class="section-padding bg-white">
     <div class="max-w-7xl mx-auto">
-        <div class="flex items-end justify-between mb-12">
+        <div class="flex items-end justify-between mb-12 reveal">
             <div>
                 <span class="section-label">What's On</span>
                 <h2 class="section-title mb-0">Upcoming Events</h2>
@@ -13,7 +13,9 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for event in upcoming_events %}
-            <a href="{% url 'event-detail' slug=event.slug %}" class="card card-lift group flex flex-col">
+            <a href="{% url 'event-detail' slug=event.slug %}"
+               class="card card-lift group flex flex-col reveal"
+               data-delay="{{ forloop.counter0 }}">
                 {% if event.thumbnail %}
                 <div class="aspect-video overflow-hidden">
                     <img src="{{ event.thumbnail.url }}" alt="{{ event.title }}"

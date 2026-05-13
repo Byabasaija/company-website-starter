@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import (SiteConfig, HomepageSection, HeroSection, HeroSlide, HeroImage, AboutSection,
+from .models import (SiteConfig, HomepageSection, HeroSlide, HeroImage, AboutSection,
                      TeamMember, Service, Testimonial, Partner, NavLink)
 from .widgets import TrixWidget
 
@@ -42,11 +42,6 @@ class HomepageSectionAdmin(admin.ModelAdmin):
     list_display  = ('get_section_type_display', 'variant', 'order', 'is_active')
     list_editable = ('variant', 'order', 'is_active')
     ordering      = ('order',)
-
-
-@admin.register(HeroSection)
-class HeroSectionAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(HeroSlide)

@@ -1,13 +1,13 @@
 {% if services %}
 <section class="section-padding bg-white">
     <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-14">
+        <div class="text-center mb-14 reveal">
             <span class="section-label">What We Offer</span>
             <h2 class="section-title mt-2">Our Services</h2>
         </div>
         <div class="divide-y divide-gray-100">
             {% for service in services %}
-            <div class="flex items-start gap-8 py-10 group">
+            <div class="flex items-start gap-8 py-10 group reveal" data-delay="{{ forloop.counter0 }}">
                 <div class="shrink-0 w-14 h-14 rounded-2xl bg-primary/8 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                     <i class="bi {{ service.icon }} text-2xl text-primary group-hover:text-white transition-colors duration-300"></i>
                 </div>

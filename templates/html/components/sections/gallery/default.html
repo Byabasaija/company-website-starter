@@ -2,7 +2,7 @@
 {% if gallery_images %}
 <section class="section-padding bg-surface">
     <div class="max-w-7xl mx-auto">
-        <div class="flex items-end justify-between mb-12">
+        <div class="flex items-end justify-between mb-12 reveal">
             <div>
                 <span class="section-label">Gallery</span>
                 <h2 class="section-title mb-0">In Pictures</h2>
@@ -14,7 +14,8 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 auto-rows-[180px]">
             {% for image in gallery_images %}
             <a href="/gallery/"
-               class="{% if forloop.first %}md:col-span-2 md:row-span-2{% endif %} overflow-hidden rounded-2xl shadow-sm group relative">
+               class="{% if forloop.first %}md:col-span-2 md:row-span-2{% endif %} overflow-hidden rounded-2xl shadow-sm group relative reveal"
+               data-delay="{{ forloop.counter0 }}">
                 <img src="{{ image.image.url }}"
                      alt="{{ image.caption|default:'' }}"
                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

@@ -26,6 +26,38 @@
   }
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll-reveal system — JS in base.html adds .is-visible */
+.reveal,
+.reveal-left,
+.reveal-right {
+  opacity: 0;
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal       { transform: translateY(28px); }
+.reveal-left  { transform: translateX(-36px); }
+.reveal-right { transform: translateX(36px); }
+.reveal.is-visible,
+.reveal-left.is-visible,
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
 @layer components {
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-primary/90 hover:shadow-md active:scale-[0.98] transition-all duration-200;

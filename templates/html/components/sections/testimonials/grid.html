@@ -1,13 +1,13 @@
 {% if testimonials %}
 <section class="section-padding bg-surface">
     <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12 reveal">
             <span class="section-label">Testimonials</span>
             <h2 class="section-title mt-2">What People Say</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for testimonial in testimonials %}
-            <div class="card p-8 flex flex-col gap-5">
+            <div class="card p-8 flex flex-col gap-5 reveal" data-delay="{{ forloop.counter0 }}">
                 <div class="flex gap-1 text-secondary text-sm">
                     {% for i in "12345" %}<i class="bi bi-star-fill"></i>{% endfor %}
                 </div>

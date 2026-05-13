@@ -2,7 +2,7 @@
 {% if latest_blogs %}
 <section class="section-padding bg-surface">
     <div class="max-w-7xl mx-auto">
-        <div class="flex items-end justify-between mb-12">
+        <div class="flex items-end justify-between mb-12 reveal">
             <div>
                 <span class="section-label">From the Blog</span>
                 <h2 class="section-title mb-0">Latest News</h2>
@@ -13,7 +13,9 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for blog in latest_blogs %}
-            <a href="{% url 'get-blog' slug=blog.slug %}" class="card card-lift group flex flex-col">
+            <a href="{% url 'get-blog' slug=blog.slug %}"
+               class="card card-lift group flex flex-col reveal"
+               data-delay="{{ forloop.counter0 }}">
                 {% if blog.thumbnail %}
                 <div class="aspect-video overflow-hidden">
                     <img src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}"

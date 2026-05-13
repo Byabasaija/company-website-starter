@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from core.models import SiteConfig, HomepageSection, HeroSection, AboutSection
+from core.models import SiteConfig, HomepageSection, AboutSection
 
 
 class HomepageViewTest(TestCase):
@@ -10,8 +10,6 @@ class HomepageViewTest(TestCase):
         HomepageSection.objects.all().delete()
         HomepageSection.objects.create(section_type='hero', order=1, is_active=True)
         HomepageSection.objects.create(section_type='about', order=2, is_active=False)
-        HeroSection.objects.all().delete()
-        HeroSection.objects.create(headline='Hello', cta_text='Go', cta_url='/')
         AboutSection.objects.all().delete()
         AboutSection.objects.create(heading='About', body='We exist.')
 

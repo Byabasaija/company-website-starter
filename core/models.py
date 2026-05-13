@@ -58,20 +58,6 @@ class HomepageSection(models.Model):
         return f'{self.get_section_type_display()} (order: {self.order})'
 
 
-class HeroSection(models.Model):
-    headline     = models.CharField(max_length=200, default='Welcome')
-    subheadline  = models.CharField(max_length=300, blank=True)
-    cta_text     = models.CharField(max_length=50, default='Learn More')
-    cta_url      = models.CharField(max_length=200, default='/about/')
-    background_image = models.ImageField(upload_to='hero/', blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'Hero Section'
-
-    def __str__(self):
-        return self.headline
-
-
 class HeroSlide(models.Model):
     RIGHT_PANEL_CHOICES = [
         ('none',     'None'),

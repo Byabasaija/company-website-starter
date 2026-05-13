@@ -1,14 +1,42 @@
 {% if services %}
-<section class="section-padding bg-surface">
-    <div class="max-w-7xl mx-auto text-center">
-        <h2 class="section-title">Our Services</h2>
-        <p class="section-subtitle">What we offer</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+<section class="section-padding bg-white relative overflow-hidden">
+
+    <div class="absolute -top-32 -right-32 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16 reveal">
+            <div>
+                <span class="section-label">What We Do</span>
+                <h2 class="section-title mb-0">Our Services</h2>
+            </div>
+            <p class="text-gray-400 max-w-xs lg:text-right text-sm leading-relaxed">
+                Everything we offer, built around your needs.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for service in services %}
-            <div class="card p-8 text-center hover:shadow-md transition-shadow">
-                <i class="bi {{ service.icon }} text-5xl text-primary mb-4 block"></i>
-                <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ service.title }}</h3>
-                <div class="text-gray-600 leading-relaxed">{{ service.description|safe }}</div>
+            <div class="group relative bg-white border border-gray-100 rounded-3xl p-8
+                        hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/8
+                        hover:-translate-y-2 transition-all duration-500 reveal"
+                 data-delay="{{ forloop.counter0 }}">
+
+                <span class="absolute bottom-4 right-6 text-8xl font-black leading-none select-none
+                             text-gray-100 group-hover:text-primary/10 transition-colors duration-500 z-0"
+                      aria-hidden="true">
+                    {{ forloop.counter|stringformat:"02d" }}
+                </span>
+
+                <h3 class="relative z-10 text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors duration-300">
+                    {{ service.title }}
+                </h3>
+                <div class="relative z-10 text-gray-500 leading-relaxed text-sm">
+                    {{ service.description|truncatewords_html:30|safe }}
+                </div>
+
+                <div class="absolute bottom-0 left-8 right-8 h-0.5 rounded-full bg-primary
+                            scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
             </div>
             {% endfor %}
         </div>

@@ -5,59 +5,124 @@
 {% block description %}Upcoming and past events from {{ site.site_name }}{% endblock %}
 
 {% block content %}
-<section class="section-padding">
+<div class="bg-surface pt-28 pb-16 text-center border-b border-gray-100">
+    <div class="max-w-3xl mx-auto px-6">
+        <p class="section-label">What's On</p>
+        <h1 class="section-title mt-2">Events</h1>
+    </div>
+</div>
+
+<section class="section-padding bg-white">
     <div class="max-w-7xl mx-auto">
-        <h1 class="section-title">Events</h1>
 
         {% if upcoming_events %}
-        <h2 class="text-xl font-semibold text-gray-700 mb-6">Upcoming</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8">Upcoming</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
             {% for event in upcoming_events %}
-            <a href="{% url 'event-detail' slug=event.slug %}" class="card hover:shadow-md transition-shadow group">
+            <div class="card group flex flex-col"
+                 x-data="{
+                     target: new Date('{{ event.start_date|date:'c' }}').getTime(),
+                     d: 0, h: 0, m: 0, s: 0,
+                     init() { this.tick(); setInterval(() => this.tick(), 1000); },
+                     tick() {
+                         let diff = this.target - Date.now();
+                         if (diff <= 0) { this.d = this.h = this.m = this.s = 0; return; }
+                         this.d = Math.floor(diff / 86400000);
+                         this.h = Math.floor((diff % 86400000) / 3600000);
+                         this.m = Math.floor((diff % 3600000) / 60000);
+                         this.s = Math.floor((diff % 60000) / 1000);
+                     },
+                     pad(n) { return String(n).padStart(2, '0'); }
+                 }">
+
                 {% if event.thumbnail %}
-                <div class="aspect-video overflow-hidden">
+                <a href="{% url 'event-detail' slug=event.slug %}" class="block aspect-video overflow-hidden">
                     <img src="{{ event.thumbnail.url }}" alt="{{ event.title }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                </div>
+                </a>
                 {% endif %}
-                <div class="p-6">
-                    <p class="text-primary text-sm font-medium mb-1">
-                        {{ event.start_date|date:"N j, Y" }}
-                        {% if event.end_date %} – {{ event.end_date|date:"N j, Y" }}{% endif %}
-                    </p>
-                    <h3 class="font-semibold text-gray-900 text-lg mb-2 group-hover:text-primary transition-colors leading-snug">
+
+                <div class="p-6 flex flex-col flex-1 gap-3">
+                    <!-- Date & location -->
+                    <div class="flex flex-wrap gap-3 text-xs font-medium text-gray-400">
+                        <span class="flex items-center gap-1">
+                            <i class="bi bi-calendar3 text-primary"></i>
+                            {{ event.start_date|date:"N j, Y" }}{% if event.end_date %} – {{ event.end_date|date:"N j, Y" }}{% endif %}
+                        </span>
+                        {% if event.location %}
+                        <span class="flex items-center gap-1">
+                            <i class="bi bi-geo-alt text-primary"></i> {{ event.location }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Title -->
+                    <a href="{% url 'event-detail' slug=event.slug %}"
+                       class="font-bold text-gray-900 text-lg leading-snug group-hover:text-primary transition-colors">
                         {{ event.title }}
-                    </h3>
-                    {% if event.location %}
-                    <p class="text-gray-500 text-sm flex items-center gap-1">
-                        <i class="bi bi-geo-alt"></i> {{ event.location }}
+                    </a>
+
+                    {% if event.organizer %}
+                    <p class="text-xs text-gray-400">
+                        <i class="bi bi-person"></i> {{ event.organizer }}
                     </p>
                     {% endif %}
+
+                    <!-- Countdown -->
+                    <div class="mt-auto pt-4 border-t border-gray-100">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Starts in</p>
+                        <div class="flex gap-3">
+                            <div class="flex flex-col items-center">
+                                <span class="text-2xl font-bold text-primary leading-none tabular-nums" x-text="pad(d)">00</span>
+                                <span class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Days</span>
+                            </div>
+                            <span class="text-gray-200 text-xl font-light mt-0.5">:</span>
+                            <div class="flex flex-col items-center">
+                                <span class="text-2xl font-bold text-primary leading-none tabular-nums" x-text="pad(h)">00</span>
+                                <span class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Hrs</span>
+                            </div>
+                            <span class="text-gray-200 text-xl font-light mt-0.5">:</span>
+                            <div class="flex flex-col items-center">
+                                <span class="text-2xl font-bold text-primary leading-none tabular-nums" x-text="pad(m)">00</span>
+                                <span class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Min</span>
+                            </div>
+                            <span class="text-gray-200 text-xl font-light mt-0.5">:</span>
+                            <div class="flex flex-col items-center">
+                                <span class="text-2xl font-bold text-secondary leading-none tabular-nums" x-text="pad(s)">00</span>
+                                <span class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Sec</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-gray-500 py-10">No upcoming events at this time.</p>
+        <p class="text-gray-400 py-10">No upcoming events at this time.</p>
         {% endif %}
 
         {% if past_events %}
-        <h2 class="text-xl font-semibold text-gray-700 mb-6 border-t border-gray-100 pt-10">Past Events</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 border-t border-gray-100 pt-10">Past Events</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for event in past_events %}
             <a href="{% url 'event-detail' slug=event.slug %}"
-               class="card hover:shadow-md transition-shadow group opacity-75 hover:opacity-100">
+               class="card group flex flex-col opacity-70 hover:opacity-100 transition-opacity">
                 {% if event.thumbnail %}
                 <div class="aspect-video overflow-hidden">
                     <img src="{{ event.thumbnail.url }}" alt="{{ event.title }}"
                          class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300">
                 </div>
                 {% endif %}
-                <div class="p-6">
-                    <p class="text-gray-400 text-sm font-medium mb-1">{{ event.start_date|date:"N j, Y" }}</p>
-                    <h3 class="font-semibold text-gray-700 text-lg mb-2 leading-snug">{{ event.title }}</h3>
+                <div class="p-6 flex flex-col gap-2">
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full w-fit">
+                        <i class="bi bi-check-circle"></i> Completed
+                    </span>
+                    <p class="text-xs text-gray-400">{{ event.start_date|date:"N j, Y" }}</p>
+                    <h3 class="font-bold text-gray-700 text-base leading-snug group-hover:text-primary transition-colors">
+                        {{ event.title }}
+                    </h3>
                     {% if event.location %}
-                    <p class="text-gray-400 text-sm flex items-center gap-1">
+                    <p class="text-xs text-gray-400 flex items-center gap-1">
                         <i class="bi bi-geo-alt"></i> {{ event.location }}
                     </p>
                     {% endif %}
@@ -66,6 +131,7 @@
             {% endfor %}
         </div>
         {% endif %}
+
     </div>
 </section>
 {% endblock %}

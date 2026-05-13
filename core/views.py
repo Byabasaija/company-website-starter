@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from .models import (HomepageSection, HeroSection, HeroSlide, HeroImage, AboutSection,
+from .models import (HomepageSection, HeroSlide, HeroImage, AboutSection,
                      TeamMember, Service, Testimonial, Partner)
 from blog.models import Blog
 from events.models import Event

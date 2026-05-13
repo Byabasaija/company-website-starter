@@ -6,70 +6,163 @@
 {% block description %}Get in touch with {{ site.site_name }}{% endblock %}
 
 {% block content %}
-<section class="section-padding min-h-[calc(100vh-4rem)] flex items-center">
-    <div class="max-w-2xl mx-auto w-full">
+<div class="min-h-[calc(100vh-4rem)] grid grid-cols-1 lg:grid-cols-2">
 
-        <div class="mb-10">
-            <h1 class="section-title">Get in Touch</h1>
-            <p class="section-subtitle">
-                We'd love to hear from you. Fill in the form and we'll get back to you shortly.
+    <!-- Left panel: contact info -->
+    <div class="bg-gray-950 text-white flex flex-col justify-between px-10 py-20 lg:px-16 lg:py-28">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-primary mb-4">Contact</p>
+            <h1 class="text-4xl lg:text-5xl font-bold leading-tight mb-6 reveal-left">
+                Let's start a<br>conversation.
+            </h1>
+            <p class="text-gray-400 leading-relaxed max-w-sm reveal-left" data-delay="1">
+                Have a question, a project in mind, or just want to say hello? Fill in the form and we'll get back to you.
             </p>
+
+            <!-- Contact details -->
+            <div class="mt-12 flex flex-col gap-5 reveal-left" data-delay="2">
+                {% if site.email %}
+                <a href="mailto:{{ site.email }}" class="flex items-center gap-4 group">
+                    <div class="w-10 h-10 rounded-xl bg-white/8 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-300">
+                        <i class="bi bi-envelope text-white/60 group-hover:text-white text-sm transition-colors"></i>
+                    </div>
+                    <span class="text-gray-300 group-hover:text-white transition-colors text-sm">{{ site.email }}</span>
+                </a>
+                {% endif %}
+                {% if site.phone %}
+                <a href="tel:{{ site.phone }}" class="flex items-center gap-4 group">
+                    <div class="w-10 h-10 rounded-xl bg-white/8 flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-300">
+                        <i class="bi bi-telephone text-white/60 group-hover:text-white text-sm transition-colors"></i>
+                    </div>
+                    <span class="text-gray-300 group-hover:text-white transition-colors text-sm">{{ site.phone }}</span>
+                </a>
+                {% endif %}
+                {% if site.address %}
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-white/8 flex items-center justify-center shrink-0 mt-0.5">
+                        <i class="bi bi-geo-alt text-white/60 text-sm"></i>
+                    </div>
+                    <span class="text-gray-300 text-sm leading-relaxed">{{ site.address }}</span>
+                </div>
+                {% endif %}
+            </div>
         </div>
 
-        <form method="POST" action="{% url 'contact-us' %}" onsubmit="return onSubmit(event)"
-              class="card p-8 flex flex-col gap-5">
-            {% csrf_token %}
+        <!-- Social links -->
+        {% if site.facebook or site.twitter or site.instagram or site.linkedin or site.youtube %}
+        <div class="mt-16 flex items-center gap-4">
+            {% if site.facebook %}
+            <a href="{{ site.facebook }}" target="_blank" rel="noopener noreferrer"
+               class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white hover:border-white/50 transition-all duration-200">
+                <i class="bi bi-facebook text-sm"></i>
+            </a>
+            {% endif %}
+            {% if site.twitter %}
+            <a href="{{ site.twitter }}" target="_blank" rel="noopener noreferrer"
+               class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white hover:border-white/50 transition-all duration-200">
+                <i class="bi bi-twitter-x text-sm"></i>
+            </a>
+            {% endif %}
+            {% if site.instagram %}
+            <a href="{{ site.instagram }}" target="_blank" rel="noopener noreferrer"
+               class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white hover:border-white/50 transition-all duration-200">
+                <i class="bi bi-instagram text-sm"></i>
+            </a>
+            {% endif %}
+            {% if site.linkedin %}
+            <a href="{{ site.linkedin }}" target="_blank" rel="noopener noreferrer"
+               class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white hover:border-white/50 transition-all duration-200">
+                <i class="bi bi-linkedin text-sm"></i>
+            </a>
+            {% endif %}
+            {% if site.youtube %}
+            <a href="{{ site.youtube }}" target="_blank" rel="noopener noreferrer"
+               class="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:text-white hover:border-white/50 transition-all duration-200">
+                <i class="bi bi-youtube text-sm"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right panel: form -->
+    <div class="bg-white flex items-center px-10 py-20 lg:px-16 lg:py-28">
+        <div class="w-full max-w-lg reveal-right">
 
             {% if errors %}
-            <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+            <div class="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-6">
                 {{ errors }}
             </div>
             {% endif %}
 
-            <div class="flex flex-col gap-1.5">
-                <label for="name" class="text-sm font-medium text-gray-700">Name</label>
-                <input type="text" id="name" name="name" class="input" maxlength="30" required
-                       value="{{ data.name }}" placeholder="Your full name">
-            </div>
+            <form method="POST" action="{% url 'contact-us' %}" class="flex flex-col gap-5">
+                {% csrf_token %}
 
-            <div class="flex flex-col gap-1.5">
-                <label class="text-sm font-medium text-gray-700">Phone</label>
-                <div class="flex gap-2">
-                    <select name="country-codes" id="country-codes" class="input w-32 shrink-0"></select>
-                    <input type="text" name="phone-number" class="input" maxlength="15" required
-                           value="{{ data.phone|phone_number }}" placeholder="Phone number">
+                <!-- Name -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="name" class="text-sm font-semibold text-gray-700">Full Name</label>
+                    <input type="text" id="name" name="name" class="input" maxlength="200"
+                           required minlength="2" value="{{ data.name }}" placeholder="Your full name">
                 </div>
-                <input type="hidden" name="phone" value="{{ data.phone }}">
-            </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="email" class="text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" class="input" maxlength="250" required
-                       value="{{ data.email }}" placeholder="you@example.com">
-            </div>
+                <!-- Phone -->
+                <div class="flex flex-col gap-1.5"
+                     x-data="{
+                         codes: [],
+                         dialCode: '+256',
+                         number: '{{ data.phone|phone_number }}',
+                         async init() {
+                             try {
+                                 const r = await fetch('{% static 'assets/json/phone-codes.json' %}');
+                                 this.codes = await r.json();
+                             } catch(e) {}
+                         },
+                         onlyDigits() { this.number = this.number.replace(/\D/g, ''); }
+                     }">
+                    <label class="text-sm font-semibold text-gray-700">Phone</label>
+                    <div class="flex gap-2">
+                        <select x-model="dialCode" class="input !w-32 shrink-0 min-w-0">
+                            <template x-if="codes.length === 0">
+                                <option value="+256">🇺🇬 +256</option>
+                            </template>
+                            <template x-for="c in codes" :key="c.code">
+                                <option :value="c.dial_code" :selected="c.dial_code === dialCode"
+                                        x-text="`${c.emoji} ${c.dial_code}`"></option>
+                            </template>
+                        </select>
+                        <input type="tel" x-model="number" @input="onlyDigits()"
+                               class="input flex-1" maxlength="12" placeholder="Phone number">
+                    </div>
+                    <input type="hidden" name="phone" :value="dialCode + number">
+                </div>
 
-            <div class="flex flex-col gap-1.5">
-                <label for="description" class="text-sm font-medium text-gray-700">Enquiry</label>
-                <textarea id="description" name="description"
-                          class="input resize-y min-h-[120px] max-h-[300px]"
-                          maxlength="1200" required
-                          placeholder="Tell us how we can help…">{{ data.description }}</textarea>
-            </div>
+                <!-- Email -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="email" class="text-sm font-semibold text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" class="input" maxlength="250"
+                           required value="{{ data.email }}" placeholder="you@example.com">
+                </div>
 
-            <div class="flex justify-end mt-2">
-                <button type="submit" class="btn-primary flex items-center gap-2">
-                    Send Message
-                    <i class="bi bi-arrow-right"></i>
+                <!-- Message -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="description" class="text-sm font-semibold text-gray-700">Message</label>
+                    <textarea id="description" name="description"
+                              class="input resize-y min-h-[140px] max-h-[300px]"
+                              maxlength="1200" required
+                              placeholder="Tell us how we can help…">{{ data.description }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-primary mt-2 self-start">
+                    Send Message <i class="bi bi-arrow-right ml-1"></i>
                 </button>
-            </div>
-        </form>
-
+            </form>
+        </div>
     </div>
-</section>
+
+</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static './js/inquiry/inquiry.js' %}"></script>
 {% if RECAPTCHA_SITE_KEY %}
 <script src="https://www.google.com/recaptcha/api.js?render={{ RECAPTCHA_SITE_KEY }}"></script>
 <script>
@@ -81,10 +174,8 @@
         const f = this;
         grecaptcha.ready(function () {
             grecaptcha.execute('{{ RECAPTCHA_SITE_KEY }}', { action: 'inquiry' }).then(function (token) {
-                let input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'g-recaptcha-response';
-                input.value = token;
+                const input = document.createElement('input');
+                input.type = 'hidden'; input.name = 'g-recaptcha-response'; input.value = token;
                 f.appendChild(input);
                 f.submit();
             });

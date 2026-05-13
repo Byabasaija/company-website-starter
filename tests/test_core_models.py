@@ -1,5 +1,5 @@
 from django.test import TestCase
-from core.models import SiteConfig, HomepageSection, HeroSection, AboutSection, TeamMember, Service, Testimonial, Partner, NavLink, FooterLink
+from core.models import SiteConfig, HomepageSection, AboutSection, TeamMember, Service, Testimonial, Partner, NavLink
 
 
 class SiteConfigSingletonTest(TestCase):
@@ -34,21 +34,6 @@ class HomepageSectionOrderingTest(TestCase):
         active = HomepageSection.objects.filter(is_active=True)
         self.assertEqual(active.count(), 1)
         self.assertEqual(active.first().section_type, 'hero')
-
-
-class HeroSectionTest(TestCase):
-    def setUp(self):
-        HeroSection.objects.all().delete()
-
-    def test_create_hero(self):
-        hero = HeroSection.objects.create(
-            headline='Welcome',
-            subheadline='We are here',
-            cta_text='Learn more',
-            cta_url='/about/',
-        )
-        self.assertEqual(HeroSection.objects.count(), 1)
-        self.assertEqual(hero.headline, 'Welcome')
 
 
 class TeamMemberTest(TestCase):

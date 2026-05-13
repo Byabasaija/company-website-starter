@@ -1,7 +1,7 @@
 {% if faq_items %}
 <section class="section-padding bg-white">
     <div class="max-w-3xl mx-auto">
-        <div class="flex items-center justify-between mb-10">
+        <div class="flex items-center justify-between mb-10 reveal">
             <h2 class="section-title mb-0">FAQ</h2>
             <a href="/faq/" class="text-primary font-semibold hover:underline text-sm flex items-center gap-1">
                 All questions <i class="bi bi-arrow-right"></i>
@@ -9,7 +9,7 @@
         </div>
         <div class="divide-y divide-gray-200 border border-gray-200 rounded-xl overflow-hidden">
             {% for item in faq_items %}
-            <div x-data="{ open: false }">
+            <div x-data="{ open: false }" class="reveal" data-delay="{{ forloop.counter0 }}">
                 <button @click="open = !open"
                         class="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors">
                     <span class="font-medium text-gray-900 pr-4">{{ item.question }}</span>
