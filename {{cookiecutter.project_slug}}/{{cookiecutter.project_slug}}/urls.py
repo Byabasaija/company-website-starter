@@ -6,10 +6,10 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.shortcuts import render
 
-from project.sitemaps import StaticSitemap
+from __PROJECT_SLUG__.sitemaps import StaticSitemap
 from blog.sitemaps import BlogSitemap
 from events.sitemaps import EventSitemap
-from project.views import rate_limiter_view, view_404, handler_403
+from __PROJECT_SLUG__.views import rate_limiter_view, view_404, handler_403
 
 admin.site.site_header = 'Site Admin'
 admin.site.index_title = 'Dashboard'

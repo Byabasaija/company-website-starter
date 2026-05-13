@@ -1,0 +1,15 @@
+{
+  "project_name": "My Company",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "site_name": "{{ cookiecutter.project_name }}",
+  "primary_color": "#1a56a0",
+  "author_email": "admin@example.com",
+  "_copy_without_render": [
+    "*.html",
+    "*.txt",
+    "*.md",
+    "*.py",
+    "*.css",
+    "*.js"
+  ]
+}

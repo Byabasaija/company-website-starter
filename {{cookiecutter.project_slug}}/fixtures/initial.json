@@ -1,0 +1,22 @@
+[
+  {
+    "model": "core.siteconfig",
+    "pk": 1,
+    "fields": {
+      "site_name":       "{{cookiecutter.site_name}}",
+      "tagline":         "",
+      "primary_color":   "{{cookiecutter.primary_color}}",
+      "secondary_color": "#f5a623",
+      "email":           "{{cookiecutter.author_email}}",
+      "phone":           "",
+      "address":         "",
+      "footer_text":     "",
+      "facebook":        "",
+      "twitter":         "",
+      "instagram":       "",
+      "linkedin":        "",
+      "youtube":         "",
+      "newsletter_enabled": true
+    }
+  }
+]

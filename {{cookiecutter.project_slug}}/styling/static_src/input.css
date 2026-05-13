@@ -5,7 +5,7 @@
 @source "../../**/templates/**/*.html";
 
 @theme {
-  --color-primary: #1a56a0;
+  --color-primary: __PRIMARY_COLOR__;
   --color-secondary: #f5a623;
   --color-accent: #2d6a4f;
   --color-surface: #f8fafc;

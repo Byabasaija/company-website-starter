@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django_ratelimit.middleware.RatelimitMiddleware',
 ]
 
-ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = '__PROJECT_SLUG__.urls'
 
 TEMPLATES = [
     {
@@ -75,14 +75,14 @@ TEMPLATES = [
                 'core.context_processors.site_config',
             ],
             'libraries': {
-                'custom_tags': 'project.templatetags.custom_tags',
-                'tailwind_tags': 'project.templatetags.tailwind_tags',
+                'custom_tags': '__PROJECT_SLUG__.templatetags.custom_tags',
+                'tailwind_tags': '__PROJECT_SLUG__.templatetags.tailwind_tags',
             },
         },
     },
 ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
+WSGI_APPLICATION = '__PROJECT_SLUG__.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
