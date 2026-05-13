@@ -1,217 +1,123 @@
 # Company Website Starter
 
-A production-ready Django CMS template for agencies and freelancers. Generate a fully-featured company website in minutes with a single command.
+**A cookiecutter template for building production-ready company websites with Django.**  
+Generate a complete, content-managed site in minutes — no boilerplate, no wiring.
 
-![Company Website Starter](django-website-template.png)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Django](https://img.shields.io/badge/django-5.2-green)
+![Python](https://img.shields.io/badge/python-3.11+-blue)
 
-## What you get
-
-A complete content-managed website with an admin panel where clients control everything — no code changes needed for day-to-day content.
-
-| Feature | Details |
-|---|---|
-| **Hero** | Slideshow or static background, configurable slides |
-| **Services** | Card grid, list, or showcase layout (swappable variants) |
-| **About** | Default or centered variant |
-| **Partners** | Auto-marquee (5+ logos) or static grid |
-| **Team / Profiles** | Category-based people pages (`/profiles/<category>/<person>/`) |
-| **Events** | Upcoming/past split, countdown timer, organizer & sponsor fields |
-| **Blog** | Trix rich-text editor, categories, SEO fields |
-| **Gallery** | Image collections with category filter |
-| **FAQ** | Alpine.js accordion |
-| **Newsletter** | Subscription with unsubscribe |
-| **Contact** | Split-panel form with reCAPTCHA support, country dial-code picker |
-| **Composable pages** | Admin-assembled pages with drag-and-drop section ordering |
-| **Section variants** | Drop a new `variant.html` into any section folder — no code changes |
-| **Navigation** | Admin-managed nav & footer links, nested dropdowns, auto-URL from page FK |
-| **Branding** | Primary/secondary colour, logo, favicon, tagline all via admin |
-| **SEO** | Sitemap.xml, robots.txt, Open Graph, Google Analytics |
-| **Deployment-ready** | Vercel, Railway, Render — Procfile + `vercel.json` included |
-
-**Stack:** Django 5.2 LTS · Tailwind CSS v4 (standalone CLI) · Alpine.js 3 · Bootstrap Icons
+![Homepage](docs/screenshots/homepage.png)
 
 ---
 
-## Quickstart (cookiecutter)
+## What's included
+
+| | |
+|---|---|
+| **Admin-driven content** | All text, images, colours, and sections controlled from the Django admin — no code deploys for content changes |
+| **Homepage sections** | Hero, Services, About, Partners, Team, Events, Gallery, FAQ, Newsletter — toggle and reorder from admin |
+| **Section variants** | Multiple layouts per section type; add a new variant by dropping a single HTML file |
+| **Blog** | Trix rich-text editor, drafts, categories, and SEO fields |
+| **Events** | Upcoming/past split with countdown timer, organizer and sponsor fields |
+| **People / Profiles** | Category-based team pages (`/profiles/<category>/<person>/`) |
+| **Contact form** | Split-panel design, dial-code picker, optional reCAPTCHA |
+| **Composable pages** | CMS pages assembled from sections in admin |
+| **SEO** | Sitemap, robots.txt, Open Graph, Google Analytics |
+| **Deployment-ready** | Vercel, Railway, Render — configs included |
+
+**Stack:** Django 5.2 · Tailwind CSS v4 · Alpine.js 3 · Bootstrap Icons
+
+---
+
+## Screenshots
+
+| Homepage | Admin | Contact |
+|---|---|---|
+| ![Homepage](docs/screenshots/homepage.png) | ![Admin](docs/screenshots/admin.png) | ![Contact](docs/screenshots/contact.png) |
+
+---
+
+## Quickstart
 
 ```bash
 pip install cookiecutter
 cookiecutter gh:your-org/company-website-starter
 ```
 
-You will be prompted for:
-
-| Prompt | Example |
-|---|---|
-| `project_name` | `UCF Chess Club` |
-| `project_slug` | `ucf_chess` (auto-generated) |
-| `site_name` | `UCF Chess Club` |
-| `primary_color` | `#1a56a0` |
-| `author_email` | `admin@ucfchess.org` |
-
-The post-generation hook installs dependencies, runs migrations, loads the initial `SiteConfig`, compiles Tailwind, and creates a `.env` file automatically.
+Answer the prompts (`project_name`, `primary_color`, `author_email`), then:
 
 ```bash
-cd ucf_chess
+cd your_project
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Visit `http://127.0.0.1:8000/admin/` to start configuring your site.
+The post-generation hook handles everything else: installs deps, runs migrations, seeds `SiteConfig`, and compiles Tailwind.
 
 ---
 
 ## Manual setup
 
-1. Clone the repo and enter the generated project directory.
+```bash
+git clone <repo>
+cd <project_slug>
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv .venv && source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+# create .env
+echo "SECRET_KEY=$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')" > .env
+echo "DEBUG=True" >> .env
 
-3. Create a `.env` file (or `.env.local` for development):
-   ```
-   SECRET_KEY=your-secret-key
-   DEBUG=True
-   ALLOWED_HOSTS=localhost,127.0.0.1
-   ```
-   Generate a secret key:
-   ```python
-   from django.core.management.utils import get_random_secret_key
-   print(get_random_secret_key())
-   ```
+python manage.py migrate
+python manage.py loaddata fixtures/initial.json
 
-4. Run migrations and load initial data:
-   ```bash
-   python manage.py migrate
-   python manage.py loaddata fixtures/initial.json
-   ```
+# compile Tailwind (see bin/ for the standalone CLI)
+bin/tailwindcss -i styling/static_src/input.css -o templates/css/output.css --minify
 
-5. Download and compile Tailwind (if not done by the hook):
-   ```bash
-   # macOS arm64
-   curl -sL https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64 -o bin/tailwindcss
-   chmod +x bin/tailwindcss
-   bin/tailwindcss -i styling/static_src/input.css -o templates/css/output.css --minify
-   ```
-
-6. Create a superuser and run the server:
-   ```bash
-   python manage.py createsuperuser
-   python manage.py runserver
-   ```
+python manage.py createsuperuser
+python manage.py runserver
+```
 
 ---
 
 ## Customisation
 
-### Change branding
-Go to **Admin → Site Configuration**. Update site name, tagline, logo, favicon, colours, social links, and contact details. No code changes required.
+**Branding** → Admin › Site Configuration (colours, logo, tagline, social links)
 
-### Homepage sections
-Go to **Admin → Homepage Sections**. Enable, reorder, and change the variant of any section by choosing from the available `variant` options.
+**Homepage layout** → Admin › Homepage Sections (enable, reorder, swap variant)
 
-Available variants per section type:
+**New section variant** → create `templates/html/components/sections/<type>/<variant>.html` — it appears in admin automatically
 
-| Section | Variants |
-|---|---|
-| `services` | `default` (card grid), `list`, `showcase` |
-| `about` | `default`, `centered` |
-| `team` | `default`, `minimal` |
-| `testimonials` | `default`, `grid` |
-
-### Add a new section variant
-Create a file at `templates/html/components/sections/<type>/<variant>.html`. It is automatically available in the admin variant dropdown — no code changes needed.
-
-### Tailwind development (watch mode)
+**Tailwind watch:**
 ```bash
 bin/tailwindcss -i styling/static_src/input.css -o templates/css/output.css --watch
-```
-
-### Template tags
-```django
-{% block title %}Page Title{% endblock %}
-{% block description %}Meta description{% endblock %}
-{% block socialTitle %}OG title{% endblock %}
-{% block socialDescription %}OG description{% endblock %}
-{% block pageImage %}{% endblock %}     {# OG image URL #}
-{% block head_tags %}{% endblock %}     {# extra <head> tags #}
-{% block scripts %}{% endblock %}       {# scripts before </body> #}
-```
-
----
-
-## Project structure
-
-```
-<project_slug>/
-├── <project_slug>/         # Django project package (settings, urls, wsgi)
-│   └── settings/
-│       ├── base.py
-│       ├── development.py
-│       └── production.py
-├── core/                   # SiteConfig, HomepageSection, NavLink, Hero, Services, etc.
-├── blog/                   # Blog with Trix editor
-├── events/                 # Events with countdown
-├── gallery/                # Image gallery
-├── faq/                    # FAQ accordion
-├── profiles/               # People / team profiles with categories
-├── newsletter/             # Email newsletter subscription
-├── inquiry/                # Contact form with reCAPTCHA
-├── pages/                  # Composable CMS pages
-├── user/                   # Custom user model
-├── utils/                  # Shared helpers
-├── templates/              # All HTML, CSS, JS, and static assets
-│   ├── html/
-│   │   ├── base.html
-│   │   ├── components/sections/  # Section partials with variant subdirs
-│   │   └── ...
-│   └── css/output.css
-├── styling/static_src/     # Tailwind input source
-├── fixtures/initial.json   # Seed data (SiteConfig)
-└── tests/
 ```
 
 ---
 
 ## Deployment
 
-### Vercel
-```bash
-python manage.py collectstatic
-```
-Set environment variables in the Vercel dashboard, then push. The `vercel.json` is pre-configured.
+Set these environment variables on your host:
 
-### Railway / Render
-Use the included `Procfile`:
-```
-web: gunicorn <project_slug>.wsgi --log-file -
-```
-Set `DEBUG=False`, `SECRET_KEY`, `ALLOWED_HOSTS`, and your database URL.
-
-### Key production environment variables
 ```
 SECRET_KEY=
 DEBUG=False
 ALLOWED_HOSTS=yourdomain.com
 DATABASE_URL=postgres://...
-GOOGLE_ANALYTICS=G-XXXXXXXXXX
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
 ```
 
----
-
-## Running tests
-
+Then:
 ```bash
-python manage.py test tests/
+python manage.py collectstatic
 ```
+
+One-click deploys:
+
+[![Deploy on Railway](railway.png)](https://railway.app?referralCode=BfMDHP)
 
 ---
 
 ## License
 
-MIT — free to use for personal and commercial projects. Attribution appreciated but not required.
+MIT © 2025 Pascal Byabasaija
