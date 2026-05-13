@@ -55,7 +55,7 @@ python manage.py runserver
 
 The post-generation hook handles everything else: installs deps, runs migrations, seeds `SiteConfig`, and compiles Tailwind.
 
----
+--- 
 
 ## Manual setup
 
@@ -111,10 +111,6 @@ Then:
 ```bash
 python manage.py collectstatic
 ```
-
-One-click deploys:
-
-[![Deploy on Railway](railway.png)](https://railway.app?referralCode=BfMDHP)
 
 ---
 

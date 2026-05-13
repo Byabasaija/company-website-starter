@@ -12,6 +12,11 @@ encoded.txt
 # Tailwind standalone binary
 bin/tailwindcss
 bin/tailwindcss.exe
+**/bin/tailwindcss
+**/bin/tailwindcss.exe
+
+# Cookiecutter-generated artefacts on main branch
+{{cookiecutter.project_slug}}/
 
 # IDE
 .idea/
