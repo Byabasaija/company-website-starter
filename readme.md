@@ -42,7 +42,7 @@ Generate a complete, content-managed site in minutes — no boilerplate, no wiri
 
 ```bash
 pip install cookiecutter
-cookiecutter gh:your-org/company-website-starter
+cookiecutter gh:Byabasaija/company-website-starter
 ```
 
 Answer the prompts (`project_name`, `primary_color`, `author_email`), then:
