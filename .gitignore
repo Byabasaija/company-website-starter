@@ -20,3 +20,4 @@ bin/tailwindcss.exe
 
 # IDE
 .idea/
+.vscode/.prettierrc.json
