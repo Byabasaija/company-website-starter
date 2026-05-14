@@ -1,4 +1,5 @@
 import environ
+import dj_database_url
 from .base import *
 
 env = environ.Env()
@@ -11,12 +12,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 INSTALLED_APPS += ['django_browser_reload']
 MIDDLEWARE += ['django_browser_reload.middleware.BrowserReloadMiddleware']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {'default': dj_database_url.config(default=env('DATABASE_URL'))}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

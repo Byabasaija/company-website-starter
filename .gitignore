@@ -1,7 +1,6 @@
 __pycache__/
 *.pyc
 *.pyo
-db.sqlite3
 media/
 staticfiles/
 .env
@@ -14,9 +13,6 @@ bin/tailwindcss
 bin/tailwindcss.exe
 **/bin/tailwindcss
 **/bin/tailwindcss.exe
-
-# Cookiecutter-generated artefacts on main branch
-{{cookiecutter.project_slug}}/
 
 # IDE
 .idea/
