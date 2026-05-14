@@ -4,7 +4,7 @@
   "site_name": "{{ cookiecutter.project_name }}",
   "primary_color": "#1a56a0",
   "author_email": "admin@example.com",
-  "database_url": "postgres://postgres:postgres@localhost:5432/{{ cookiecutter.project_slug }}",
+  "db_engine": ["postgres", "mysql"],
   "_copy_without_render": [
     "*.html",
     "*.txt",

@@ -12,7 +12,7 @@ PROJECT_SLUG  = "{{cookiecutter.project_slug}}"
 PRIMARY_COLOR = "{{cookiecutter.primary_color}}"
 SITE_NAME     = "{{cookiecutter.site_name}}"
 AUTHOR_EMAIL  = "{{cookiecutter.author_email}}"
-DATABASE_URL  = "{{cookiecutter.database_url}}"
+DB_ENGINE     = "{{cookiecutter.db_engine}}"
 
 
 # ---------------------------------------------------------------------------
@@ -104,9 +104,13 @@ def main():
     # 3. Generate .env.local
     if not os.path.exists(".env.local"):
         print("\n🔑 Creating .env.local file...")
+        if DB_ENGINE == "mysql":
+            db_url = f"mysql://user:password@localhost:3306/{PROJECT_SLUG}"
+        else:
+            db_url = f"postgres://user:password@localhost:5432/{PROJECT_SLUG}"
         with open(".env.local", "w") as f:
             f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
-            f.write(f"DATABASE_URL={DATABASE_URL}\n")
+            f.write(f"DATABASE_URL={db_url}\n")
 
     # 4. Download Tailwind binary if not present
     tailwind_bin = os.path.join("bin", "tailwindcss")
