@@ -12,6 +12,7 @@ PROJECT_SLUG  = "{{cookiecutter.project_slug}}"
 PRIMARY_COLOR = "{{cookiecutter.primary_color}}"
 SITE_NAME     = "{{cookiecutter.site_name}}"
 AUTHOR_EMAIL  = "{{cookiecutter.author_email}}"
+DATABASE_URL  = "{{cookiecutter.database_url}}"
 
 
 # ---------------------------------------------------------------------------
@@ -105,7 +106,7 @@ def main():
         print("\n🔑 Creating .env.local file...")
         with open(".env.local", "w") as f:
             f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
-            f.write("DATABASE_URL=postgres://localhost/{{cookiecutter.project_slug}}\n")
+            f.write(f"DATABASE_URL={DATABASE_URL}\n")
 
     # 4. Run migrations
     print("\n🗄️  Running database migrations...")
