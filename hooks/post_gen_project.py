@@ -130,8 +130,10 @@ def main():
 
         os.makedirs("bin", exist_ok=True)
         try:
-            import urllib.request
-            urllib.request.urlretrieve(url, tailwind_bin)
+            subprocess.run(
+                ["curl", "-fL", "--progress-bar", "-o", tailwind_bin, url],
+                check=True,
+            )
             os.chmod(tailwind_bin, 0o755)
         except Exception as e:
             print(f"  Warning: could not download Tailwind: {e}")
