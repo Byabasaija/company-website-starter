@@ -111,6 +111,11 @@ def main():
         with open(".env.local", "w") as f:
             f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
             f.write(f"DATABASE_URL={db_url}\n")
+            f.write("\n# See .env.example for all available variables\n")
+            f.write("ALLOWED_HOSTS=localhost,127.0.0.1\n")
+            f.write("GOOGLE_ANALYTICS=\n")
+            f.write("RECAPTCHA_SITE_KEY=\n")
+            f.write("RECAPTCHA_SECRET_KEY=\n")
 
     # 4. Download Tailwind binary if not present
     tailwind_bin = os.path.join("bin", "tailwindcss")
