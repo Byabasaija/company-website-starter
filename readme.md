@@ -116,4 +116,4 @@ python manage.py collectstatic
 
 ## License
 
-MIT © 2025 Pascal Byabasaija
+MIT © 2026 Pascal Byabasaija
