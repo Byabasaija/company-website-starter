@@ -101,22 +101,14 @@ def main():
     print("\n📦 Installing Python dependencies...")
     run([uv, "pip", "install", "-r", "requirements.txt", "--python", venv_python])
 
-    # 3. Generate .env.local before migrations so DATABASE_URL is available
+    # 3. Generate .env.local
     if not os.path.exists(".env.local"):
         print("\n🔑 Creating .env.local file...")
         with open(".env.local", "w") as f:
             f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
             f.write(f"DATABASE_URL={DATABASE_URL}\n")
 
-    # 4. Run migrations
-    print("\n🗄️  Running database migrations...")
-    run([venv_python, "manage.py", "migrate"])
-
-    # 5. Load initial SiteConfig fixture
-    print("\n🌱 Loading initial site configuration...")
-    run([venv_python, "manage.py", "loaddata", "fixtures/initial.json"])
-
-    # 6. Download Tailwind binary if not present
+    # 4. Download Tailwind binary if not present
     tailwind_bin = os.path.join("bin", "tailwindcss")
     if platform.system() == "Windows":
         tailwind_bin += ".exe"
@@ -141,7 +133,7 @@ def main():
             print(f"  Warning: could not download Tailwind: {e}")
             print("  Run manually: https://tailwindcss.com/blog/standalone-cli")
 
-    # 7. Compile Tailwind
+    # 5. Compile Tailwind
     if os.path.exists(tailwind_bin):
         print("\n🎨 Compiling Tailwind CSS...")
         run([
@@ -156,9 +148,12 @@ def main():
 
 Next steps:
   source .venv/bin/activate
+  python manage.py migrate
+  python manage.py loaddata fixtures/initial.json
   python manage.py createsuperuser
   python manage.py runserver
 
+Your DATABASE_URL is set in .env.local — update it if needed before running migrate.
 Then visit http://127.0.0.1:8000/admin/ to configure your site.
 """)
 
