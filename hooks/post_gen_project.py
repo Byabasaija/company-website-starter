@@ -100,15 +100,22 @@ def main():
     print("\n📦 Installing Python dependencies...")
     run([uv, "pip", "install", "-r", "requirements.txt", "--python", venv_python])
 
-    # 3. Run migrations
+    # 3. Generate .env.local before migrations so DATABASE_URL is available
+    if not os.path.exists(".env.local"):
+        print("\n🔑 Creating .env.local file...")
+        with open(".env.local", "w") as f:
+            f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
+            f.write("DATABASE_URL=postgres://localhost/{{cookiecutter.project_slug}}\n")
+
+    # 4. Run migrations
     print("\n🗄️  Running database migrations...")
     run([venv_python, "manage.py", "migrate"])
 
-    # 4. Load initial SiteConfig fixture
+    # 5. Load initial SiteConfig fixture
     print("\n🌱 Loading initial site configuration...")
     run([venv_python, "manage.py", "loaddata", "fixtures/initial.json"])
 
-    # 5. Download Tailwind binary if not present
+    # 6. Download Tailwind binary if not present
     tailwind_bin = os.path.join("bin", "tailwindcss")
     if platform.system() == "Windows":
         tailwind_bin += ".exe"
@@ -133,7 +140,7 @@ def main():
             print(f"  Warning: could not download Tailwind: {e}")
             print("  Run manually: https://tailwindcss.com/blog/standalone-cli")
 
-    # 6. Compile Tailwind
+    # 7. Compile Tailwind
     if os.path.exists(tailwind_bin):
         print("\n🎨 Compiling Tailwind CSS...")
         run([
@@ -142,13 +149,6 @@ def main():
             "-o", "templates/css/output.css",
             "--minify",
         ])
-
-    # 7. Generate .env.local (used by development settings)
-    if not os.path.exists(".env.local"):
-        print("\n🔑 Creating .env.local file...")
-        with open(".env.local", "w") as f:
-            f.write(f"SECRET_KEY={secrets.token_urlsafe(50)}\n")
-            f.write("DATABASE_URL=postgres://localhost/{{cookiecutter.project_slug}}\n")
 
     print(f"""
 ✅ Project ready!
